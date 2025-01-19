@@ -1,0 +1,14 @@
+.heading{
+  margin: 2rem;
+  font-weight: 900;
+  margin-bottom: 0;
+}
+
+.movieGridRow:last-child{
+  display: flex;
+  gap: 20px;
+  padding: 2rem;
+  justify-items: center;
+  overflow-x: scroll;
+  padding-bottom: 0;
+}

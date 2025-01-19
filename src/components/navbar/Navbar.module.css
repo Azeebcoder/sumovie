@@ -1,0 +1,49 @@
+/* Navbar Container */
+.navBar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: left;
+  padding: 1rem 2rem;
+  background-color: rgba(0, 0, 0, 0.705);
+  color: white;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+/* Left Section - Logo and Categories */
+.leftNav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  max-width: 50%;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #f5c518; /* Gold color */
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.categories {
+  display: flex;
+  gap: 1rem;
+}
+
+.categories a {
+  color: #ccc;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.categories a:hover {
+  color: #f5c518;
+}

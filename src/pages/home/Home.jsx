@@ -48,7 +48,7 @@ const Home = () => {
         // emulateTouch={true}
       >
         {movieList.map((movie) => (
-          <Link to={`/movie/${movie.id}`}>
+          <Link key={`sumit-${movie.id}`} to={`/movie/${movie.id}`}>
             <div key={movie.id} className={styles.carouselItem}>
               <div className={styles.homeImage}>
                 <img

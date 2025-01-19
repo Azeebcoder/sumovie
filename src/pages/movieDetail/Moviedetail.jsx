@@ -3,6 +3,8 @@ import axios from "axios";
 import MovieCard from "../../components/moviecard/MovieCard"; // Import the MovieCard component
 import styles from "./Moviedetail.module.css";
 import { Link, useParams } from "react-router-dom";
+import SkeletonCard from "../../components/SkeletonCard";
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const Moviedetail = () => {
   const {type} = useParams();
@@ -33,17 +35,19 @@ const Moviedetail = () => {
     fetchData();
   },[type])
 
-  if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className={styles.movieGrid}>
-      {movieList.map((movie) => (
+    <>
+      <h2 className={styles.heading}>{type.toUpperCase()}</h2>
+      <div className={styles.movieGrid}>
+      {loading ? <SkeletonCard cards={10}/> : movieList.map((movie) => (
         <Link to={`/movie/${movie.id}`}>
           <MovieCard key={movie.id} movie={movie} />
         </Link>
       ))}
     </div>
+    </>
   );
 };
 

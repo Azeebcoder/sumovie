@@ -1,18 +1,24 @@
-import styles from './MovieDetailRow.module.css'
-import React, { useState, useEffect } from "react";
+import styles from './MovieDetailRow.module.css';
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import MovieCard from '../moviecard/MovieCard';
 
-const MovieDetailRow = ({type}) => {
+import 'react-loading-skeleton/dist/skeleton.css'
+import SkeletonCard from '../SkeletonCard';
 
+const MovieDetailRow = ({ type }) => {
   const [movieList, setMovieList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const scrollContainerRef = useRef(null);
+
   const apiKey = "5b56297f4ee90e3b2ba01f59779e393b";
-  const url = type != "bollywood" ? `https://api.themoviedb.org/3/movie/${type}?api_key=${apiKey}`:`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=hi-IN&region=IN&with_original_language=hi
-`;
+  const url =
+    type !== "bollywood"
+      ? `https://api.themoviedb.org/3/movie/${type}?api_key=${apiKey}`
+      : `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=hi-IN&region=IN&with_original_language=hi`;
 
   const fetchData = async () => {
     try {
@@ -24,26 +30,40 @@ const MovieDetailRow = ({type}) => {
       setLoading(false);
     }
   };
-  useEffect(() => {
 
+  useEffect(() => {
     fetchData();
+
+    const scrollContainer = scrollContainerRef.current;
+
+    if (!scrollContainer) return; // Ensure the ref exists
+
+    const handleWheel = (event) => {
+      event.preventDefault();
+      scrollContainer.scrollLeft += event.deltaY;
+    };
+
+    scrollContainer.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      scrollContainer.removeEventListener("wheel", handleWheel);
+    };
   }, []);
 
-  if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <>
       <h1 className={styles.heading}>{type.toUpperCase()}</h1>
-      <div className={styles.movieGridRow}>
-      {movieList.map((movie) => (
-        <Link to={`/movie/${movie.id}`}>
-          <MovieCard key={movie.id} movie={movie} />
-        </Link>
-      ))}
-    </div>
+      <div className={styles.movieGridRow} ref={scrollContainerRef}>
+        {movieList.map((movie) => (
+          <Link key={movie.id} to={`/movie/${movie.id}`}>
+            <MovieCard movie={movie} />
+          </Link>
+        ))}
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default MovieDetailRow
+export default MovieDetailRow;

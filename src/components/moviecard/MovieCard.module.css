@@ -75,3 +75,20 @@
   color: #ddd;
   line-height: normal;
 }
+
+@media (max-width: 768px){
+  .card{
+    min-width: 180px;
+  max-height: 280px;
+  }
+  .title {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  .meta {
+    margin-top: 3px;
+  }
+  .overview {
+    display: none;
+  }
+}

@@ -12,6 +12,7 @@
   max-height: 35rem;
   overflow: hidden;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  margin-top: 4rem;
 }
 
 .homeImage img {
@@ -93,10 +94,6 @@
 
 /* Small screens (mobile phones) */
 @media (max-width: 768px) {
-  .homeImage {
-    max-height: 250px;
-  }
-
   .details {
     bottom: 2rem;
     padding: 10px;
@@ -112,56 +109,6 @@
     line-height: normal;
   }
 }
-
-/* Medium screens (tablets) */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .homeImage {
-    max-height: 30rem;
-  }
-
-  .details {
-    bottom: 0rem;
-    max-width: 70%;
-  }
-
-  .title {
-    font-size: 1.8rem;
-  }
-
-  .meta {
-    font-size: 0.9rem;
-    gap: 1rem;
-  }
-
-  .overview {
-    font-size: 0.9rem;
-  }
-}
-
-/* Large screens (desktops) */
-@media (min-width: 1025px) {
-  .homeImage {
-    max-height: 40rem;
-  }
-
-  .details {
-    max-width: 50%;
-  }
-
-  .title {
-    font-size: 2rem;
-  }
-
-  .meta {
-    font-size: 1rem;
-    gap: 2rem;
-  }
-
-  .overview {
-    font-size: 0.95rem;
-  }
-}
-
 
 
 

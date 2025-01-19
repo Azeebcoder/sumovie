@@ -4,8 +4,8 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: left;
-  padding: 1rem 2rem;
-  background-color: rgba(0, 0, 0, 0.705);
+  padding: 0rem 2rem;
+  background-color: rgb(0, 0, 0);
   color: white;
   font-family: Arial, sans-serif;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -14,10 +14,12 @@
   left: 0;
   right: 0;
   z-index: 1000;
+  height: 4rem;
 }
 
 /* Left Section - Logo and Categories */
 .leftNav {
+  height: 100%;
   display: flex;
   align-items: center;
   gap: 2rem;
@@ -34,6 +36,7 @@
 
 .categories {
   display: flex;
+  align-items: center;
   gap: 1rem;
 }
 
@@ -46,4 +49,16 @@
 
 .categories a:hover {
   color: #f5c518;
+}
+
+@media (max-width: 768px){
+  .logo{
+    font-size: 1.5rem;
+  }
+  .categories {
+    gap: .8rem;
+  }
+  .categories a {
+    font-size: 1rem;
+  }
 }

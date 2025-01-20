@@ -6,6 +6,7 @@ import { Carousel } from "react-responsive-carousel";
 import axios from "axios";
 import { FaStar } from "react-icons/fa6";
 import MovieDetailRow from "../../components/moviedetailrow/MovieDetailRow";
+import SkeletonCard from "../../components/SkeletonCard";
 
 const Home = () => {
   const [movieList, setMovieList] = useState([]);
@@ -30,11 +31,12 @@ const Home = () => {
     fetchData();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  // if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <>
+    {loading ? <SkeletonCard/>:
       <Carousel
         autoPlay
         infiniteLoop
@@ -75,6 +77,7 @@ const Home = () => {
           </Link>
         ))}
       </Carousel>
+}
       <div>
       <MovieDetailRow type={'popular'}/>
       </div>

@@ -5,7 +5,7 @@ const SkeletonCard = ({cards}) => {
   return (
     Array(cards).fill(0).map((_,index)=>(
       <div key={index}>
-      <Skeleton width={240} height={370}/>
+      <Skeleton width={170} height={300}/>
     </div>
     ))
     

@@ -39,7 +39,9 @@ const Moviedetail = () => {
 
   return (
     <>
+      <div className={styles.headingArea}>
       <h2 className={styles.heading}>{type.toUpperCase()}</h2>
+      </div>
       <div className={styles.movieGrid}>
       {loading ? <SkeletonCard cards={10}/> : movieList.map((movie) => (
         <Link to={`/movie/${movie.id}`}>

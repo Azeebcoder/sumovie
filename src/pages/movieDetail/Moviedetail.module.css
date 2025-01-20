@@ -7,13 +7,18 @@
   gap: 20px;
   justify-items: center;
 }
+.headingArea{
+  margin-top: 4rem;
+  padding: 1rem;
+  padding-left: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 .heading{
-  margin-top: 6rem;
-  margin-left: 1rem;
   font-size: 2rem;
   font-weight: 900;
-  margin-bottom: 2rem;
 }
 @media (max-width: 768px){
   .movieGrid{
@@ -21,5 +26,9 @@
     padding: 1rem;
     gap: 10px;
     /* gap: 0; */
+  }
+  .heading{
+    font-size: 1.7rem;
+    font-weight: 600;
   }
 }

@@ -54,9 +54,12 @@ const MovieDetailRow = ({ type }) => {
 
   return (
     <>
+      <div className={styles.headingArea}>
       <h1 className={styles.heading}>{type.toUpperCase()}</h1>
+      <Link to={`/movies/${type}`}>View All</Link>
+      </div>
       <div className={styles.movieGridRow} ref={scrollContainerRef}>
-        {movieList.map((movie) => (
+        {loading?<SkeletonCard cards={10}/>: movieList.map((movie) => (
           <Link key={movie.id} to={`/movie/${movie.id}`}>
             <MovieCard movie={movie} />
           </Link>

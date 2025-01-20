@@ -1,9 +1,25 @@
-.heading{
-  margin: 2rem;
-  font-weight: 900;
+.headingArea{
+  margin-top: 1rem;
+  display: flex;
+  padding: 1rem;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 0;
 }
-
+.heading{
+  font-weight: 700;
+}
+.headingArea a{
+  padding: .5rem 1rem;
+  background-color: rgb(31, 165, 64);
+  border-radius: 10px;
+  color: white;
+  transition: .3s;
+}
+.headingArea a:hover{
+  background-color: rgb(23, 199, 67);
+  transform: scale(1.1);
+}
 .movieGridRow{
   display: flex;
   gap: 20px;
@@ -11,18 +27,20 @@
   justify-items: center;
   overflow-x: auto;
   padding-bottom: 0;
-  scrollbar-color: transparent transparent;
+  padding-top: 1rem;
+  /* scrollbar-color: transparent transparent; */
   user-select: none;
   scroll-behavior: smooth;
 }
 .movieGridRow::-webkit-scrollbar{
-  height: 1px;
+  width: 0px;
+  height: 0px;
   background-color: transparent;
 }
 @media (max-width: 768px) {
   .heading{
     font-weight: 600;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
   }
   .movieGridRow{
     padding-left: .5rem;

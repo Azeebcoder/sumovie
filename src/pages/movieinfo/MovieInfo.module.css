@@ -132,6 +132,33 @@
 .rating span{
   color: #f5c518;
 }
+.cast{
+  display: grid;
+  grid-template-columns: repeat(6,1fr);
+
+}
+.cast div{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.screenShots{
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.screenShots div{
+  width: 100%;
+}
+.screenShots div img{
+  width: 100%;
+}
+
+
 @media (max-width: 768px){
   .banner {
     display: none;
@@ -153,6 +180,9 @@
   .provider img {
     width: 45px;
     height: 45px;
+  }
+  .cast{
+    grid-template-columns: repeat(2,1fr);
   }
 
 }

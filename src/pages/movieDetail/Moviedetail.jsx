@@ -5,11 +5,12 @@ import styles from "./Moviedetail.module.css";
 import { Link, useParams } from "react-router-dom";
 import SkeletonCard from "../../components/SkeletonCard";
 
-const Moviedetail = ({search}) => {
+const Moviedetail = ({search,similar}) => {
   const { type} = useParams();
   const [movieList, setMovieList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [totalResults,setTotalResults] = useState(0);
 
   const apiKey = "5b56297f4ee90e3b2ba01f59779e393b";
 
@@ -25,10 +26,12 @@ const Moviedetail = ({search}) => {
       let url =
         type !== "bollywood"
           ? `https://api.themoviedb.org/3/movie/${type}?api_key=${apiKey}&page=${page}`
-          : `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=hi-IN&region=IN&with_original_language=hi&page=${page}`;
+          : `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&region=IN&with_original_language=hi&page=${page}`;
       search ? url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${search}&page=${page}`:null;
+      similar ? url = `https://api.themoviedb.org/3/movie/${similar}/recommendations?api_key=${apiKey}&page=${page}`:null;
       const response = await axios.get(url);
       setMovieList(response.data.results);
+      setTotalResults(response.data.total_results);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -66,7 +69,7 @@ const Moviedetail = ({search}) => {
   return (
     <>
       <div className={styles.headingArea}>
-        {search ? <h2>Searched Results...</h2>:<h2 className={styles.heading}>{type.toUpperCase()}</h2>}
+        {search ? <h2>{totalResults} Results for {search}...</h2>:similar?<h2>Similar movies</h2>:<h2 className={styles.heading}>{type.toUpperCase()}</h2>}
       </div>
       <div className={styles.movieGrid}>
         {loading ? (

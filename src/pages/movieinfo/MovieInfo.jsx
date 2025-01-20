@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import styles from "./MovieInfo.module.css";
 import { FaStar } from "react-icons/fa6";
+import Moviedetail from '../movieDetail/Moviedetail.jsx'
 
 const MovieInfo = () => {
   const { id } = useParams();
@@ -11,11 +12,18 @@ const MovieInfo = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [is18Plus, setIs18Plus] = useState(false); // New state for 18+ check
+  const [credits, setCredits] = useState(null);
+  const [images, setImages] = useState(null);
+  const [trailer, setTrailer] = useState(null);
+  const [similar,setSimilar] = useState(null);
 
   const apiKey = "5b56297f4ee90e3b2ba01f59779e393b";
   const movieUrl = `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=en-US`;
   const providerUrl = `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${apiKey}`;
   const releaseDatesUrl = `https://api.themoviedb.org/3/movie/${id}/release_dates?api_key=${apiKey}`;
+  const castUrl = `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`;
+  const imagesUrl = `https://api.themoviedb.org/3/movie/${id}/images?api_key=${apiKey}`;
+  const trailerUrl = `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${apiKey}`;
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -26,17 +34,24 @@ const MovieInfo = () => {
             axios.get(providerUrl),
             axios.get(releaseDatesUrl),
           ]);
-  
+
         setMovie(movieResponse.data);
-  
+
         const releaseDates = releaseDatesResponse.data.results || [];
-  
+
         // List of possible 18+ certifications
         const eighteenPlusCertifications = [
-          "18", "18+", "r", "x", "nc-17", "a", "adults-only",
-          "r18+", "restricted"
+          "18",
+          "18+",
+          "r",
+          "x",
+          "nc-17",
+          "a",
+          "adults-only",
+          "r18+",
+          "restricted",
         ];
-  
+
         // Detect if the movie is rated 18+ in any region
         const is18Plus = releaseDates.some((item) =>
           item.release_dates?.some((date) => {
@@ -44,9 +59,9 @@ const MovieInfo = () => {
             return eighteenPlusCertifications.includes(certification);
           })
         );
-  
+
         setIs18Plus(is18Plus);
-  
+
         const providers = providerResponse.data.results.IN || {}; // Adjust region as needed
         setWatchProviders(providers.flatrate || []);
         setLoading(false);
@@ -56,9 +71,22 @@ const MovieInfo = () => {
         setLoading(false);
       }
     };
-  
+
     fetchMovieDetails();
   }, [id]);
+
+  useEffect(() => {
+    const fetchMovieDetails = async () => {
+      const response = await axios.get(castUrl);
+      const response1 = await axios.get(imagesUrl);
+      const response2 = await axios.get(trailerUrl);
+      setCredits(response.data.cast);
+      setImages(response1.data.backdrops);
+      setTrailer(response2.data.results[0].key);
+    };
+
+    fetchMovieDetails();
+  }, [movie]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -137,6 +165,74 @@ const MovieInfo = () => {
               <p>Not available for streaming in your region.</p>
             )}
           </div>
+        </div>
+      </div>
+      <div>
+        <div>
+        <h3>Trailer</h3>
+        <div
+          style={{
+            position: "relative",
+            paddingBottom: "56.25%", // Aspect ratio (16:9)
+            height: 0,
+            overflow: "hidden",
+            width: "100%", // Set width to 100% of the parent container
+          }}
+        >
+          <iframe
+            src={`https://www.youtube.com/embed/${trailer}`}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%", // Make the iframe fill the width of the container
+              height: "100%", // Make the iframe fill the height of the container
+            }}
+          ></iframe>
+        </div>
+        </div>
+        <div>
+          <h3>Cast</h3>
+          <div className={styles.cast}>
+            {credits ? (
+              credits.map((credit, index) => (
+                <div key={credit.id}>
+                  <img
+                    src={`https://image.tmdb.org/t/p/w200${credit.profile_path}`}
+                    alt={credit.name}
+                  />
+                  <h3>{credit.name}</h3>
+                  <h4>{credit.character}</h4>
+                </div>
+              ))
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+        <div>
+          <h3>ScreenShots</h3>
+          <div className={styles.screenShots}>
+            {images ? (
+              images.map((image, index) => (
+                <div key={`sumit-${index}`}>
+                  <img
+                    src={`https://image.tmdb.org/t/p/original${image.file_path}`}
+                    alt=""
+                  />
+                </div>
+              ))
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+        <div>
+          <Moviedetail similar={id}/>
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ const SearchMovie = () => {
   const [currentSearch, setCurrentSearch] = useState(search);
 
   useEffect(() => {
+    localStorage.removeItem("pageno")
     // Update currentSearch whenever the search parameter changes
     setCurrentSearch(search);
   }, [search]); // Re-run the effect whenever 'search' changes

@@ -25,6 +25,7 @@ const Navbar = () => {
     e.preventDefault();
     type ? navigate(`/movies/${type}/${searchQuery}`):navigate(`movies/sumit/${searchQuery}`);
     setIsSearchVisible(!isSearchVisible)
+    localStorage.removeItem("pageno")
     setSearchQuery("");    
   };
 

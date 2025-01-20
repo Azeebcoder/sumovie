@@ -71,6 +71,9 @@
 }
 
 @media (max-width: 768px){
+  .navBar{
+    flex-direction: row-reverse;
+  }
   .leftNav{
     max-width: 30%;
   }
@@ -90,7 +93,7 @@
     width: 100%;
     height: 100vh;
     padding-top: 5rem;
-    transform: translateX(100%);
+    transform: translateX(-100%);
   }
   .categories a {
     font-size: 1rem;

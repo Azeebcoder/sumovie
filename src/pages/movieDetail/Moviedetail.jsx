@@ -38,6 +38,10 @@ const Moviedetail = () => {
   useEffect(() => {
     fetchData(currentPage);
   }, [type, currentPage]);
+  useEffect(() => {
+    localStorage.removeItem("pageno");
+    setCurrentPage(1)
+  }, [type]);
 
   // Save currentPage to localStorage whenever it changes
   useEffect(() => {

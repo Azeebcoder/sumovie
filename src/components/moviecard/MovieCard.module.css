@@ -13,7 +13,7 @@
 }
 
 .card:hover {
-  transform: translateY(-10px);
+  transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
@@ -51,6 +51,9 @@
   margin: 0;
   color: #f5c518;
 }
+.title span{
+  display: none;
+}
 
 .meta {
   display: flex;
@@ -67,6 +70,12 @@
 
 .rating {
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.rating span{
+  color: #f5c518;
 }
 
 .overview {
@@ -81,12 +90,23 @@
     min-width: 180px;
   max-height: 280px;
   }
+  .cardDetails{
+    padding-top: 15rem;
+    opacity: 1;
+    background: linear-gradient(rgba(10, 10, 10, 0),rgb(0, 0, 0));
+    text-align: center;
+  }
   .title {
     font-size: 1.2rem;
     font-weight: bold;
+    color: rgb(207, 203, 203);
   }
-  .meta {
-    margin-top: 3px;
+  .title span{
+    display: initial;
+    color: #ca6279;
+  }
+  .meta{
+    display: none;
   }
   .overview {
     display: none;

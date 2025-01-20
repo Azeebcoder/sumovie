@@ -116,7 +116,22 @@
   color: #b6b0b0;
   font-size: 0.85rem;
 }
-
+.movieName{
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  align-items: center;
+}
+.movieName h1 span{
+  color: rgb(192, 5, 5);
+}
+.rating{
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.rating span{
+  color: #f5c518;
+}
 @media (max-width: 768px){
   .banner {
     display: none;

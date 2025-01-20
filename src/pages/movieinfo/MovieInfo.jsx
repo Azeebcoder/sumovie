@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import styles from "./MovieInfo.module.css";
+import { FaStar } from "react-icons/fa6";
 
 const MovieInfo = () => {
   const { id } = useParams();
@@ -9,20 +10,39 @@ const MovieInfo = () => {
   const [watchProviders, setWatchProviders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [is18Plus, setIs18Plus] = useState(false); // New state for 18+ check
 
   const apiKey = "5b56297f4ee90e3b2ba01f59779e393b";
   const movieUrl = `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=en-US`;
   const providerUrl = `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${apiKey}`;
+  const releaseDatesUrl = `https://api.themoviedb.org/3/movie/${id}/release_dates?api_key=${apiKey}`;
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
       try {
-        const [movieResponse, providerResponse] = await Promise.all([
-          axios.get(movieUrl),
-          axios.get(providerUrl),
-        ]);
+        const [movieResponse, providerResponse, releaseDatesResponse] =
+          await Promise.all([
+            axios.get(movieUrl),
+            axios.get(providerUrl),
+            axios.get(releaseDatesUrl),
+          ]);
 
         setMovie(movieResponse.data);
+
+        // Fetch all release dates
+        const releaseDates = releaseDatesResponse.data.results;
+
+        // Look for any region with 18+ certification
+        const is18Plus = releaseDates.some((item) =>
+          item.release_dates.some((date) =>
+            ["A", "18+", "R", "X", "NC-17"].includes(date.certification)
+          )
+        );
+
+        // Update the state
+        setIs18Plus(is18Plus);
+
+        // Set watch providers
         const providers = providerResponse.data.results.IN || {}; // Replace "IN" with your desired region
         setWatchProviders(providers.flatrate || []);
         setLoading(false);
@@ -55,22 +75,37 @@ const MovieInfo = () => {
       <div className={styles.detailsSection}>
         <div className={styles.posterWrapper}>
           <img
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            src={`https://image.tmdb.org/t/p/w500${
+              movie.belongs_to_collection
+                ? Math.floor(Math.random() * 2) + 1 == 1
+                  ? movie.belongs_to_collection.poster_path
+                  : movie.poster_path
+                : movie.poster_path
+            }`}
             alt={movie.title}
             className={styles.poster}
           />
         </div>
 
         <div className={styles.info}>
+          <div className={styles.movieName}>
+            <h1>
+              {is18Plus ? <span>(18+) </span> : null}
+              {movie.title} ({movie.release_date.substring(0, 4)})
+            </h1>
+          </div>
           <h2>Overview</h2>
           <p>{movie.overview}</p>
-            <h3>Release Date</h3>
-            <p>{movie.release_date}</p>
-            <h3>Rating : </h3>
-            <p>{movie.vote_average.toFixed(1)} ⭐ </p>
-            <h3>Runtime : </h3>
-            <p>{movie.runtime} min</p>
-
+          <h3>Release Date</h3>
+          <p>{movie.release_date}</p>
+          <h3>Rating :</h3>
+          <p className={styles.rating}>{movie.vote_average.toFixed(1)}<span>
+                                <FaStar />
+                              </span></p>
+          <h3>Runtime :</h3>
+          <p>{movie.runtime} min</p>
+          <h3>Status :</h3>
+          <p>{movie.status}</p>
           <h3>Genres</h3>
           <div className={styles.genres}>
             {movie.genres.map((genre) => (

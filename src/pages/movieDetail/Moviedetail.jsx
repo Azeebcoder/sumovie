@@ -25,7 +25,7 @@ const Moviedetail = ({search}) => {
       let url =
         type !== "bollywood"
           ? `https://api.themoviedb.org/3/movie/${type}?api_key=${apiKey}&page=${page}`
-          : `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=hi-IN&region=IN&with_original_language=hi&page=${page}`;
+          : `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&region=IN&with_original_language=hi&page=${page}`;
       search ? url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${search}&page=${page}`:null;
       const response = await axios.get(url);
       setMovieList(response.data.results);

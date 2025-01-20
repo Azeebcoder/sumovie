@@ -26,32 +26,37 @@ const MovieInfo = () => {
             axios.get(providerUrl),
             axios.get(releaseDatesUrl),
           ]);
-
+  
         setMovie(movieResponse.data);
-
-        // Fetch all release dates
-        const releaseDates = releaseDatesResponse.data.results;
-
-        // Look for any region with 18+ certification
+  
+        const releaseDates = releaseDatesResponse.data.results || [];
+  
+        // List of possible 18+ certifications
+        const eighteenPlusCertifications = [
+          "18", "18+", "r", "x", "nc-17", "a", "adults-only",
+          "r18+", "restricted"
+        ];
+  
+        // Detect if the movie is rated 18+ in any region
         const is18Plus = releaseDates.some((item) =>
-          item.release_dates.some((date) =>
-            ["A", "18+", "R", "X", "NC-17"].includes(date.certification)
-          )
+          item.release_dates?.some((date) => {
+            const certification = date.certification?.toLowerCase() || "";
+            return eighteenPlusCertifications.includes(certification);
+          })
         );
-
-        // Update the state
+  
         setIs18Plus(is18Plus);
-
-        // Set watch providers
-        const providers = providerResponse.data.results.IN || {}; // Replace "IN" with your desired region
+  
+        const providers = providerResponse.data.results.IN || {}; // Adjust region as needed
         setWatchProviders(providers.flatrate || []);
         setLoading(false);
       } catch (err) {
+        console.error("Error fetching movie details:", err);
         setError(err.message);
         setLoading(false);
       }
     };
-
+  
     fetchMovieDetails();
   }, [id]);
 

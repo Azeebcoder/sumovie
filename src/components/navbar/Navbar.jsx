@@ -49,6 +49,7 @@ const Navbar = () => {
                 value={searchQuery}
                 onChange={handleSearchChange}
                 placeholder="Enter movie name"
+                autoFocus
               />
               <button className={styles.submitButton} type="submit">
                 Search

@@ -20,6 +20,35 @@
   font-size: 2rem;
   font-weight: 900;
 }
+
+.pagination {
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.pagination button {
+  padding: 10px 15px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: .3s;
+}
+.pagination button:hover{
+  background-color: #003a77;
+  transform: scale(1.05);
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+
 @media (max-width: 768px){
   .movieGrid{
     grid-template-columns: 1fr 1fr;
@@ -30,5 +59,8 @@
   .heading{
     font-size: 1.7rem;
     font-weight: 600;
+  }
+  .headingArea{
+    padding-left: 1rem;
   }
 }

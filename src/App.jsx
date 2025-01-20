@@ -6,6 +6,7 @@ import Moviedetail from './pages/movieDetail/Moviedetail'
 import Navbar from './components/navbar/Navbar'
 import MovieInfo from './pages/movieinfo/MovieInfo'
 import { SkeletonTheme } from 'react-loading-skeleton';
+import "react-loading-skeleton/dist/skeleton.css";
 
 const App = () => {
   return (

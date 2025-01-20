@@ -96,6 +96,6 @@
     font-size: 1rem;
   }
   .menu{
-    display: initial;
+    display: flex;
   }
 }

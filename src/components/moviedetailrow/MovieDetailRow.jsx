@@ -18,7 +18,7 @@ const MovieDetailRow = ({ type }) => {
   const url =
     type !== "bollywood"
       ? `https://api.themoviedb.org/3/movie/${type}?api_key=${apiKey}`
-      : `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=hi-IN&region=IN&with_original_language=hi`;
+      : `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&region=IN&with_original_language=hi`;
 
   const fetchData = async () => {
     try {

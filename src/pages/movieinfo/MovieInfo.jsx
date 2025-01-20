@@ -99,9 +99,12 @@ const MovieInfo = () => {
           <h3>Release Date</h3>
           <p>{movie.release_date}</p>
           <h3>Rating :</h3>
-          <p className={styles.rating}>{movie.vote_average.toFixed(1)}<span>
-                                <FaStar />
-                              </span></p>
+          <p className={styles.rating}>
+            {movie.vote_average.toFixed(1)}
+            <span>
+              <FaStar />
+            </span>
+          </p>
           <h3>Runtime :</h3>
           <p>{movie.runtime} min</p>
           <h3>Status :</h3>

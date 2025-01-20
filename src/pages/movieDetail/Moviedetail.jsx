@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import MovieCard from "../../components/moviecard/MovieCard"; 
 import styles from "./Moviedetail.module.css";
 import { Link, useParams } from "react-router-dom";
 import SkeletonCard from "../../components/SkeletonCard";
 
-const Moviedetail = () => {
-  const { type } = useParams();
+const Moviedetail = ({search}) => {
+  const { type} = useParams();
   const [movieList, setMovieList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,10 +22,11 @@ const Moviedetail = () => {
   const fetchData = async (page) => {
     try {
       setLoading(true);
-      const url =
+      let url =
         type !== "bollywood"
           ? `https://api.themoviedb.org/3/movie/${type}?api_key=${apiKey}&page=${page}`
           : `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=hi-IN&region=IN&with_original_language=hi&page=${page}`;
+      search ? url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${search}&page=${page}`:null;
       const response = await axios.get(url);
       setMovieList(response.data.results);
     } catch (err) {
@@ -37,11 +38,23 @@ const Moviedetail = () => {
 
   useEffect(() => {
     fetchData(currentPage);
-  }, [type, currentPage]);
+  }, [type, currentPage,search]);
+  const prevTypeRef = useRef();
+
   useEffect(() => {
-    localStorage.removeItem("pageno");
-    setCurrentPage(1)
-  }, [type]);
+    const validTypes = ['top_rated', 'popular', 'bollywood', 'upcoming'];
+    
+    if (
+      prevTypeRef.current !== null &&
+      validTypes.includes(prevTypeRef.current) &&
+      prevTypeRef.current !== type &&
+      validTypes.includes(type)
+    ) {
+      localStorage.removeItem("pageno");
+      setCurrentPage(1);
+    }
+    prevTypeRef.current = type;
+  }, [type])
 
   // Save currentPage to localStorage whenever it changes
   useEffect(() => {
@@ -53,7 +66,7 @@ const Moviedetail = () => {
   return (
     <>
       <div className={styles.headingArea}>
-        <h2 className={styles.heading}>{type.toUpperCase()}</h2>
+        {search ? <h2>Searched Results...</h2>:<h2 className={styles.heading}>{type.toUpperCase()}</h2>}
       </div>
       <div className={styles.movieGrid}>
         {loading ? (

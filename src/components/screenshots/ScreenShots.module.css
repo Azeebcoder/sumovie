@@ -1,0 +1,23 @@
+.images{
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 10px;
+
+}
+.image{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+.image img{
+  width: 100%;
+  border-radius: 10px;
+}
+@media (max-width: 768px){
+  .images{
+    grid-template-columns: repeat(1,1fr);
+  }
+}

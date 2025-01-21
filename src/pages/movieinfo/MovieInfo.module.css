@@ -35,6 +35,7 @@
   max-width: 1200px;
   margin: 40px auto;
   padding: 0 20px;
+  margin-bottom: 0;
 }
 
 .posterWrapper {
@@ -132,32 +133,20 @@
 .rating span{
   color: #f5c518;
 }
-.cast{
-  display: grid;
-  grid-template-columns: repeat(6,1fr);
 
-}
-.cast div{
+.infoSection{
+  width: 100%;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
 }
-.screenShots{
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
+.infoSection h2{
+  margin: 2rem 0;
+  font-size: 2rem;
+  font-weight: 900;
+  color: #029aff;
 }
-.screenShots div{
-  width: 100%;
-}
-.screenShots div img{
-  width: 100%;
-}
-
 
 @media (max-width: 768px){
   .banner {
@@ -180,9 +169,6 @@
   .provider img {
     width: 45px;
     height: 45px;
-  }
-  .cast{
-    grid-template-columns: repeat(2,1fr);
   }
 
 }

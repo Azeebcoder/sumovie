@@ -3,7 +3,11 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import styles from "./MovieInfo.module.css";
 import { FaStar } from "react-icons/fa6";
-import Moviedetail from '../movieDetail/Moviedetail.jsx'
+import Moviedetail from "../movieDetail/Moviedetail.jsx";
+import { useLocation } from "react-router-dom";
+import Trailer from "../../components/trailer/Trailer.jsx";
+import Cast from "../../components/cast/Cast.jsx";
+import ScreenShots from "../../components/screenshots/ScreenShots.jsx";
 
 const MovieInfo = () => {
   const { id } = useParams();
@@ -12,18 +16,17 @@ const MovieInfo = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [is18Plus, setIs18Plus] = useState(false); // New state for 18+ check
-  const [credits, setCredits] = useState(null);
-  const [images, setImages] = useState(null);
-  const [trailer, setTrailer] = useState(null);
-  const [similar,setSimilar] = useState(null);
 
   const apiKey = "5b56297f4ee90e3b2ba01f59779e393b";
   const movieUrl = `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=en-US`;
   const providerUrl = `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${apiKey}`;
   const releaseDatesUrl = `https://api.themoviedb.org/3/movie/${id}/release_dates?api_key=${apiKey}`;
-  const castUrl = `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`;
-  const imagesUrl = `https://api.themoviedb.org/3/movie/${id}/images?api_key=${apiKey}`;
-  const trailerUrl = `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${apiKey}`;
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -71,22 +74,10 @@ const MovieInfo = () => {
         setLoading(false);
       }
     };
+    setLoading(true);
 
     fetchMovieDetails();
   }, [id]);
-
-  useEffect(() => {
-    const fetchMovieDetails = async () => {
-      const response = await axios.get(castUrl);
-      const response1 = await axios.get(imagesUrl);
-      const response2 = await axios.get(trailerUrl);
-      setCredits(response.data.cast);
-      setImages(response1.data.backdrops);
-      setTrailer(response2.data.results[0].key);
-    };
-
-    fetchMovieDetails();
-  }, [movie]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -168,71 +159,20 @@ const MovieInfo = () => {
         </div>
       </div>
       <div>
-        <div>
-        <h3>Trailer</h3>
-        <div
-          style={{
-            position: "relative",
-            paddingBottom: "56.25%", // Aspect ratio (16:9)
-            height: 0,
-            overflow: "hidden",
-            width: "100%", // Set width to 100% of the parent container
-          }}
-        >
-          <iframe
-            src={`https://www.youtube.com/embed/${trailer}`}
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%", // Make the iframe fill the width of the container
-              height: "100%", // Make the iframe fill the height of the container
-            }}
-          ></iframe>
+        <div className={styles.infoSection}>
+          <h2>Trailer</h2>
+          <Trailer id={id} />
         </div>
+        <div className={styles.infoSection}>
+          <h2>Cast</h2>
+          <Cast id={id} />
+        </div>
+        <div className={styles.infoSection}>
+          <h2>ScreenShots</h2>
+          <ScreenShots id={id} />
         </div>
         <div>
-          <h3>Cast</h3>
-          <div className={styles.cast}>
-            {credits ? (
-              credits.map((credit, index) => (
-                <div key={credit.id}>
-                  <img
-                    src={`https://image.tmdb.org/t/p/w200${credit.profile_path}`}
-                    alt={credit.name}
-                  />
-                  <h3>{credit.name}</h3>
-                  <h4>{credit.character}</h4>
-                </div>
-              ))
-            ) : (
-              <></>
-            )}
-          </div>
-        </div>
-        <div>
-          <h3>ScreenShots</h3>
-          <div className={styles.screenShots}>
-            {images ? (
-              images.map((image, index) => (
-                <div key={`sumit-${index}`}>
-                  <img
-                    src={`https://image.tmdb.org/t/p/original${image.file_path}`}
-                    alt=""
-                  />
-                </div>
-              ))
-            ) : (
-              <></>
-            )}
-          </div>
-        </div>
-        <div>
-          <Moviedetail similar={id}/>
+          <Moviedetail similar={id} />
         </div>
       </div>
     </div>

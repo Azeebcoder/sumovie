@@ -1,0 +1,39 @@
+.casts{
+  display: grid;
+  grid-template-columns: repeat(7,1fr);
+  gap: 10px;
+}
+.cast{
+  width: 100%;
+  background-color: #222222;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: .5rem;
+  padding: 5px;
+  overflow: hidden;
+}
+.cast img{
+  width: 100%;
+  border-radius: 8px;
+}
+.cast h3{
+  font-size: 1.1rem;
+  color: rgb(160, 216, 7);
+  text-align: center;
+  
+}
+.cast h4{
+  font-size: .9rem;
+  color: rgb(156, 156, 156);
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+@media (max-width: 768px){
+  .casts{
+    grid-template-columns: repeat(3,1fr);
+  }
+}

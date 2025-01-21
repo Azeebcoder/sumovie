@@ -9,7 +9,9 @@ import { SkeletonTheme } from 'react-loading-skeleton';
 import "react-loading-skeleton/dist/skeleton.css";
 import SearchMovie from './pages/searchMovie/SearchMovie'
 
+
 const App = () => {
+  
   return (
     <>
     <SkeletonTheme baseColor='#7e7e7e' highlightColor='#525252'>

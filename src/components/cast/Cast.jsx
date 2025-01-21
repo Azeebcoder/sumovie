@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "./Cast.module.css";
-import { Img } from "react-image";
-
 const Cast = ({ id }) => {
   const apiKey = "5b56297f4ee90e3b2ba01f59779e393b";
   const castUrl = `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`;
@@ -22,10 +20,8 @@ const Cast = ({ id }) => {
         {credits ? (
           credits.map((credit, index) => (
             <div key={credit.id} className={styles.cast}>
-              <Img
-                src={`https://image.tmdb.org/t/p/w200${credit.profile_path}`}
-                loader={<div>Loading...</div>}
-                unloader={<img src="https://victoriastrokerecovery.org/wp-content/uploads/2024/07/placeholder.jpg" alt="Fallback" />}
+              <img
+                src={credit.profile_path? `https://image.tmdb.org/t/p/w200${credit.profile_path}`:"https://victoriastrokerecovery.org/wp-content/uploads/2024/07/placeholder.jpg"}
                 alt="User"
               />
               <h3>{credit.name}</h3>

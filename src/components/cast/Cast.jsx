@@ -21,7 +21,7 @@ const Cast = ({ id }) => {
           credits.map((credit, index) => (
             <div key={credit.id} className={styles.cast}>
               <img
-                src={credit.profile_path? `https://image.tmdb.org/t/p/w200${credit.profile_path}`:"https://victoriastrokerecovery.org/wp-content/uploads/2024/07/placeholder.jpg"}
+                src={credit.profile_path? `https://image.tmdb.org/t/p/w200${credit.profile_path}`:"https://pelhamanimalclinic.com/files/Avatar-Placeholder.jpg"}
                 alt="User"
               />
               <h3>{credit.name}</h3>

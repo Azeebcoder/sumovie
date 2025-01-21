@@ -8,6 +8,7 @@ import { useLocation } from "react-router-dom";
 import Trailer from "../../components/trailer/Trailer.jsx";
 import Cast from "../../components/cast/Cast.jsx";
 import ScreenShots from "../../components/screenshots/ScreenShots.jsx";
+import { Config } from "../../config/Config.js";
 
 const MovieInfo = () => {
   const { id } = useParams();
@@ -17,7 +18,7 @@ const MovieInfo = () => {
   const [error, setError] = useState(null);
   const [is18Plus, setIs18Plus] = useState(false); // New state for 18+ check
 
-  const apiKey = "5b56297f4ee90e3b2ba01f59779e393b";
+  const apiKey = Config.apiKey;
   const movieUrl = `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=en-US`;
   const providerUrl = `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${apiKey}`;
   const releaseDatesUrl = `https://api.themoviedb.org/3/movie/${id}/release_dates?api_key=${apiKey}`;

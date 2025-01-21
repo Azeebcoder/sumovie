@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "./Cast.module.css";
+import { Config } from "../../config/Config";
 const Cast = ({ id }) => {
-  const apiKey = "5b56297f4ee90e3b2ba01f59779e393b";
+  const apikey = Config.apiKey;
   const castUrl = `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`;
   const [credits, setCredits] = useState(null);
 

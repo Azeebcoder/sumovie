@@ -5,6 +5,7 @@ import styles from "./Moviedetail.module.css";
 import { Link, useParams } from "react-router-dom";
 import SkeletonCard from "../../components/SkeletonCard";
 import { useLocation } from "react-router-dom";
+import { Config } from "../../config/Config";
 
 const Moviedetail = ({ search, similar }) => {
   const { type } = useParams();
@@ -13,7 +14,7 @@ const Moviedetail = ({ search, similar }) => {
   const [error, setError] = useState(null);
   const [totalResults, setTotalResults] = useState(0);
 
-  const apiKey = "5b56297f4ee90e3b2ba01f59779e393b";
+  const apiKey = Config.apiKey;
 
   // Initialize currentPage from localStorage or default to 1
   const [currentPage, setCurrentPage] = useState(() => {

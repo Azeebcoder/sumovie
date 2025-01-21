@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from './ScreenShots.module.css'
+import { Config } from "../../config/Config";
 
 const ScreenShots = ({id}) => {
   const [images, setImages] = useState(null);
-  const apiKey = "5b56297f4ee90e3b2ba01f59779e393b";
+  const apiKey = Config.apiKey;
   const imagesUrl = `https://api.themoviedb.org/3/movie/${id}/images?api_key=${apiKey}`;
 
   useEffect(() => {

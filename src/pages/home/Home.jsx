@@ -7,13 +7,14 @@ import axios from "axios";
 import { FaStar } from "react-icons/fa6";
 import MovieDetailRow from "../../components/moviedetailrow/MovieDetailRow";
 import SkeletonCard from "../../components/SkeletonCard";
+import { Config } from "../../config/Config";
 
 const Home = () => {
   const [movieList, setMovieList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const apiKey = "5b56297f4ee90e3b2ba01f59779e393b";
+  const apiKey = Config.apiKey;
   const url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=1&sort_by=popularity.desc`;
 
   useEffect(() => {

@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import MovieCard from '../moviecard/MovieCard';
+import { Config } from '../../config/Config';
 
 import 'react-loading-skeleton/dist/skeleton.css'
 import SkeletonCard from '../SkeletonCard';
@@ -14,7 +15,7 @@ const MovieDetailRow = ({ type }) => {
 
   const scrollContainerRef = useRef(null);
 
-  const apiKey = "5b56297f4ee90e3b2ba01f59779e393b";
+  const apiKey = Config.apiKey;
   const url =
     type !== "bollywood"
       ? `https://api.themoviedb.org/3/movie/${type}?api_key=${apiKey}`

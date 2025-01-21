@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from './Trailer.module.css';
+import { Config } from "../../config/Config";
 
 const Trailer = ({ id }) => {
   const [trailer, setTrailer] = useState(null);
   const [key, setKey] = useState(null);
-  const apiKey = "5b56297f4ee90e3b2ba01f59779e393b";
+  const apiKey = Config.apiKey;
 
   const trailerUrl = `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${apiKey}`;
 

@@ -19,7 +19,7 @@ export default function WatchMovie() {
         {/* PLAYER */}
         <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-zinc-900 shadow-2xl">
           {/* Glow */}
-          <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-orange-500/5 to-transparent pointer-events-none z-0" />
+          <div className="absolute inset-0 bg-linear-to-br from-red-500/10 via-orange-500/5 to-transparent pointer-events-none z-0" />
 
           {/* Video */}
           <div className="relative aspect-video w-full z-10">

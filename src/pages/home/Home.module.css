@@ -1,4 +1,9 @@
 /* General styles */
+
+.carouselWrapper {
+  overflow: hidden;
+}
+
 .carouselItem {
   position: relative;
   color: white;
@@ -33,7 +38,7 @@
     to left,
     rgba(0, 0, 0, 0.1),
     rgba(0, 0, 0, 1)
-  ); /* Add your preferred gradient here */
+  );
   z-index: 1;
 }
 
@@ -43,7 +48,7 @@
   left: 0;
   padding: 20px;
   padding-left: 3rem;
-  z-index: 2; /* Ensure details appear above gradient */
+  z-index: 2;
   text-align: left;
   max-width: 50%;
 }
@@ -74,7 +79,8 @@
   align-items: center;
   gap: 5px;
 }
-.rating span{
+
+.rating span {
   color: #f5c518;
 }
 
@@ -90,9 +96,8 @@
   transition: transform 0.3s ease-in-out;
 }
 
-/* Responsive Design */
+/* Mobile */
 
-/* Small screens (mobile phones) */
 @media (max-width: 768px) {
   .details {
     bottom: 2rem;
@@ -105,10 +110,7 @@
   }
 
   .overview {
-    font-size: .80rem;
+    font-size: 0.8rem;
     line-height: normal;
   }
 }
-
-
-

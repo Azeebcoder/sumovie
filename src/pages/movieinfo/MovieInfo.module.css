@@ -15,12 +15,15 @@
   background-repeat: no-repeat;
   display: flex;
   align-items: flex-end;
-  /* position: relative; */
 }
 
 .overlay {
   width: 100%;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0)
+  );
   padding: 20px;
 }
 
@@ -53,10 +56,6 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
 }
 
-
-
-
-
 .info {
   flex: 2;
 }
@@ -87,7 +86,6 @@
   color: #fff;
 }
 
-
 .watchProviders {
   display: flex;
   gap: 10px;
@@ -117,58 +115,124 @@
   color: #b6b0b0;
   font-size: 0.85rem;
 }
-.movieName{
-  margin-bottom: 2rem;
+
+.movieName {
+  margin-bottom: 1rem;
   font-size: 1rem;
   align-items: center;
 }
-.movieName h1 span{
+
+.movieName h1 span {
   color: rgb(192, 5, 5);
 }
-.rating{
+
+.rating {
   display: flex;
   align-items: center;
-  gap: .5rem;
+  gap: 0.5rem;
 }
-.rating span{
+
+.rating span {
   color: #f5c518;
 }
 
-.infoSection{
+.infoSection {
   width: 100%;
   padding: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
-.infoSection h2{
+
+.infoSection h2 {
   margin: 2rem 0;
   font-size: 2rem;
   font-weight: 900;
   color: #029aff;
 }
 
-@media (max-width: 768px){
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.viewMoreBtn {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 10px;
+  background: #029aff;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: 600;
+}
+
+.viewMoreBtn:hover {
+  transform: scale(1.05);
+  background: #0279cc;
+}
+
+.actionButtons {
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.watchNowBtn {
+  padding: 0.9rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ff003c, #ff7b00);
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 8px 20px rgba(255, 0, 60, 0.35);
+}
+
+.watchNowBtn:hover {
+  transform: translateY(-2px) scale(1.03);
+}
+
+@media (max-width: 768px) {
   .banner {
     display: none;
   }
+
   .detailsSection {
     flex-direction: column;
     width: 100%;
   }
+
   .poster {
     width: 100%;
     max-width: 250px;
   }
+
   .info p {
     line-height: normal;
   }
+
   .provider {
     gap: 8px;
   }
+
   .provider img {
     width: 45px;
     height: 45px;
   }
 
+  .title {
+    font-size: 2rem;
+  }
+
+  .infoSection h2 {
+    font-size: 1.5rem;
+  }
+
+  .watchNowBtn {
+    width: 100%;
+  }
 }

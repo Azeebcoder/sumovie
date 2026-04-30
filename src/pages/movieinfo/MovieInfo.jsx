@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import styles from "./MovieInfo.module.css";
 import { FaStar } from "react-icons/fa6";
@@ -12,15 +12,19 @@ import { Config } from "../../config/Config.js";
 
 const MovieInfo = () => {
   const { id } = useParams();
+
   const [movie, setMovie] = useState(null);
   const [watchProviders, setWatchProviders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [is18Plus, setIs18Plus] = useState(false); // New state for 18+ check
+  const [is18Plus, setIs18Plus] = useState(false);
 
   const apiKey = Config.apiKey;
+
   const movieUrl = `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=en-US`;
+
   const providerUrl = `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${apiKey}`;
+
   const releaseDatesUrl = `https://api.themoviedb.org/3/movie/${id}/release_dates?api_key=${apiKey}`;
 
   const { pathname } = useLocation();
@@ -43,7 +47,6 @@ const MovieInfo = () => {
 
         const releaseDates = releaseDatesResponse.data.results || [];
 
-        // List of possible 18+ certifications
         const eighteenPlusCertifications = [
           "18",
           "18+",
@@ -56,18 +59,21 @@ const MovieInfo = () => {
           "restricted",
         ];
 
-        // Detect if the movie is rated 18+ in any region
-        const is18Plus = releaseDates.some((item) =>
+        const is18PlusDetected = releaseDates.some((item) =>
           item.release_dates?.some((date) => {
-            const certification = date.certification?.toLowerCase() || "";
+            const certification =
+              date.certification?.toLowerCase() || "";
+
             return eighteenPlusCertifications.includes(certification);
           })
         );
 
-        setIs18Plus(is18Plus);
+        setIs18Plus(is18PlusDetected);
 
-        const providers = providerResponse.data.results.IN || {}; // Adjust region as needed
+        const providers = providerResponse.data.results.IN || {};
+
         setWatchProviders(providers.flatrate || []);
+
         setLoading(false);
       } catch (err) {
         console.error("Error fetching movie details:", err);
@@ -75,13 +81,16 @@ const MovieInfo = () => {
         setLoading(false);
       }
     };
+
     setLoading(true);
 
     fetchMovieDetails();
   }, [id]);
 
   if (loading) return <p>Loading...</p>;
+
   if (error) return <p>Error: {error}</p>;
+
   if (!movie) return null;
 
   return (
@@ -102,7 +111,7 @@ const MovieInfo = () => {
           <img
             src={`https://image.tmdb.org/t/p/w500${
               movie.belongs_to_collection
-                ? Math.floor(Math.random() * 2) + 1 == 1
+                ? Math.floor(Math.random() * 2) + 1 === 1
                   ? movie.belongs_to_collection.poster_path
                   : movie.poster_path
                 : movie.poster_path
@@ -119,22 +128,41 @@ const MovieInfo = () => {
               {movie.title} ({movie.release_date.substring(0, 4)})
             </h1>
           </div>
+
+          <Link className={styles.actionButtons} to={`/watch/${id}`}>
+            <button className={styles.watchNowBtn} >
+              ▶ Watch Now
+            </button>
+          </Link>
+
           <h2>Overview</h2>
+
           <p>{movie.overview}</p>
+
           <h3>Release Date</h3>
+
           <p>{movie.release_date}</p>
+
           <h3>Rating :</h3>
+
           <p className={styles.rating}>
             {movie.vote_average.toFixed(1)}
+
             <span>
               <FaStar />
             </span>
           </p>
+
           <h3>Runtime :</h3>
+
           <p>{movie.runtime} min</p>
+
           <h3>Status :</h3>
+
           <p>{movie.status}</p>
+
           <h3>Genres</h3>
+
           <div className={styles.genres}>
             {movie.genres.map((genre) => (
               <span key={genre.id}>{genre.name}</span>
@@ -142,14 +170,19 @@ const MovieInfo = () => {
           </div>
 
           <h3>Where to Watch</h3>
+
           <div className={styles.watchProviders}>
             {watchProviders.length > 0 ? (
               watchProviders.map((provider) => (
-                <div key={provider.provider_id} className={styles.provider}>
+                <div
+                  key={provider.provider_id}
+                  className={styles.provider}
+                >
                   <img
                     src={`https://image.tmdb.org/t/p/w92${provider.logo_path}`}
                     alt={provider.provider_name}
                   />
+
                   <span>{provider.provider_name}</span>
                 </div>
               ))
@@ -159,19 +192,34 @@ const MovieInfo = () => {
           </div>
         </div>
       </div>
+
       <div>
         <div className={styles.infoSection}>
           <h2>Trailer</h2>
+
           <Trailer id={id} />
         </div>
+
         <div className={styles.infoSection}>
-          <h2>Cast</h2>
-          <Cast id={id} />
+          <div className={styles.sectionHeader}>
+            <h2>Cast</h2>
+
+            <button className={styles.viewMoreBtn}>
+              View All
+            </button>
+          </div>
+
+          <Cast id={id} limit={10} />
         </div>
+
         <div className={styles.infoSection}>
-          <h2>ScreenShots</h2>
-          <ScreenShots id={id} />
+          <div className={styles.sectionHeader}>
+            <h2>ScreenShots</h2>
+          </div>
+
+          <ScreenShots id={id} limit={5} />
         </div>
+
         <div>
           <Moviedetail similar={id} />
         </div>

@@ -9,6 +9,8 @@ import { SkeletonTheme } from 'react-loading-skeleton';
 import "react-loading-skeleton/dist/skeleton.css";
 import SearchMovie from './pages/searchMovie/SearchMovie'
 import Footer from './components/footer/Footer'
+import WatchMovie from './pages/WatchMovie.jsx'
+
 
 
 const App = () => {
@@ -23,6 +25,7 @@ const App = () => {
         <Route path='/movie/:id' element={<MovieInfo/>} />
         <Route path='/movies/:type' element={<Moviedetail />} />
         <Route path='/movies/:type/:search' element={<SearchMovie/>} />
+        <Route path='/watch/:id' element={<WatchMovie/>} />
 
       </Routes>
       <Footer/>

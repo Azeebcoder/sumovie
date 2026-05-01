@@ -3,12 +3,12 @@ import axios from "axios";
 import styles from './Trailer.module.css';
 import { Config } from "../../config/Config";
 
-const Trailer = ({ id }) => {
+const Trailer = ({ id , type }) => {
   const [trailer, setTrailer] = useState(null);
   const [key, setKey] = useState(null);
   const apiKey = Config.apiKey;
 
-  const trailerUrl = `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${apiKey}`;
+  const trailerUrl = `https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${apiKey}`;
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -21,7 +21,7 @@ const Trailer = ({ id }) => {
     };
 
     fetchMovieDetails();
-  }, [trailerUrl]);
+  }, [trailerUrl, id, type]);
 
   useEffect(() => {
     if (trailer) {

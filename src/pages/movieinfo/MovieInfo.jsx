@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import axios from "axios";
-import styles from "./MovieInfo.module.css";
-import { FaStar } from "react-icons/fa6";
+
+import {
+  FaStar,
+  FaPlay,
+  FaClock,
+  FaCalendar,
+  FaCircleCheck,
+} from "react-icons/fa6";
+
+import { Config } from "../../config/Config.js";
+
 import Moviedetail from "../movieDetail/Moviedetail.jsx";
-import { useLocation } from "react-router-dom";
 import Trailer from "../../components/trailer/Trailer.jsx";
 import Cast from "../../components/cast/Cast.jsx";
 import ScreenShots from "../../components/screenshots/ScreenShots.jsx";
-import { Config } from "../../config/Config.js";
 
 const MovieInfo = () => {
-  const { id } = useParams();
+  const { id, type: routeType } = useParams();
+  const { pathname } = useLocation();
 
   const [movie, setMovie] = useState(null);
   const [watchProviders, setWatchProviders] = useState([]);
@@ -21,208 +29,242 @@ const MovieInfo = () => {
 
   const apiKey = Config.apiKey;
 
-  const movieUrl = `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=en-US`;
+  // =========================
+  // AUTO DETECT TYPE (SAFE)
+  // =========================
+  const type =
+    routeType || (pathname.includes("/tv") ? "tv" : "movie");
 
-  const providerUrl = `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${apiKey}`;
+  // =========================
+  // API URLS
+  // =========================
+  const baseUrl =
+    type === "tv"
+      ? `https://api.themoviedb.org/3/tv/${id}?api_key=${apiKey}&language=en-US`
+      : `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=en-US`;
 
-  const releaseDatesUrl = `https://api.themoviedb.org/3/movie/${id}/release_dates?api_key=${apiKey}`;
+  const providerUrl =
+    type === "tv"
+      ? `https://api.themoviedb.org/3/tv/${id}/watch/providers?api_key=${apiKey}`
+      : `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${apiKey}`;
 
-  const { pathname } = useLocation();
+  const releaseDatesUrl =
+    type === "movie"
+      ? `https://api.themoviedb.org/3/movie/${id}/release_dates?api_key=${apiKey}`
+      : null;
 
+  // =========================
+  // SCROLL TOP
+  // =========================
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [pathname]);
 
+  // =========================
+  // FETCH DATA
+  // =========================
   useEffect(() => {
-    const fetchMovieDetails = async () => {
+    const fetchData = async () => {
       try {
-        const [movieResponse, providerResponse, releaseDatesResponse] =
-          await Promise.all([
-            axios.get(movieUrl),
-            axios.get(providerUrl),
-            axios.get(releaseDatesUrl),
-          ]);
+        setLoading(true);
 
-        setMovie(movieResponse.data);
-
-        const releaseDates = releaseDatesResponse.data.results || [];
-
-        const eighteenPlusCertifications = [
-          "18",
-          "18+",
-          "r",
-          "x",
-          "nc-17",
-          "a",
-          "adults-only",
-          "r18+",
-          "restricted",
+        const requests = [
+          axios.get(baseUrl),
+          axios.get(providerUrl),
         ];
 
-        const is18PlusDetected = releaseDates.some((item) =>
-          item.release_dates?.some((date) => {
-            const certification =
-              date.certification?.toLowerCase() || "";
+        if (releaseDatesUrl) {
+          requests.push(axios.get(releaseDatesUrl));
+        }
 
-            return eighteenPlusCertifications.includes(certification);
-          })
-        );
+        const responses = await Promise.all(requests);
 
-        setIs18Plus(is18PlusDetected);
+        const mainData = responses[0].data;
+        const providerData = responses[1].data;
 
-        const providers = providerResponse.data.results.IN || {};
+        setMovie(mainData);
 
+        // =========================
+        // WATCH PROVIDERS
+        // =========================
+        const providers = providerData?.results?.IN || {};
         setWatchProviders(providers.flatrate || []);
+
+        // =========================
+        // 18+ CHECK (MOVIE ONLY)
+        // =========================
+        if (type === "movie" && responses[2]) {
+          const releaseDates = responses[2].data.results || [];
+
+          const is18 = releaseDates.some((item) =>
+            item.release_dates?.some((date) => {
+              const cert = (date.certification || "").toLowerCase();
+              return ["18", "r", "x", "nc-17"].includes(cert);
+            })
+          );
+
+          setIs18Plus(is18);
+        }
 
         setLoading(false);
       } catch (err) {
-        console.error("Error fetching movie details:", err);
         setError(err.message);
         setLoading(false);
       }
     };
 
-    setLoading(true);
+    fetchData();
+  }, [id, type]);
 
-    fetchMovieDetails();
-  }, [id]);
+  // =========================
+  // LOADING
+  // =========================
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-black text-white">
+        <div className="h-14 w-14 animate-spin rounded-full border-4 border-red-500 border-t-transparent" />
+      </div>
+    );
+  }
 
-  if (loading) return <p>Loading...</p>;
-
-  if (error) return <p>Error: {error}</p>;
+  if (error) {
+    return (
+      <p className="py-20 text-center text-red-500">
+        Error: {error}
+      </p>
+    );
+  }
 
   if (!movie) return null;
 
+  // =========================
+  // SAFE VALUES
+  // =========================
+  const title = movie?.name || movie?.title;
+
+  const date =
+    type === "tv"
+      ? movie?.first_air_date
+      : movie?.release_date;
+
+  const runtime =
+    type === "tv"
+      ? `${movie?.number_of_seasons || 1} Seasons`
+      : `${movie?.runtime || 0} min`;
+
+  // =========================
+  // UI
+  // =========================
   return (
-    <div className={styles.movieDetailContainer}>
-      <div
-        className={styles.banner}
-        style={{
-          backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
-        }}
-      >
-        <div className={styles.overlay}>
-          <h1 className={styles.title}>{movie.title}</h1>
-        </div>
-      </div>
+    <div className="min-h-screen bg-black text-white">
 
-      <div className={styles.detailsSection}>
-        <div className={styles.posterWrapper}>
-          <img
-            src={`https://image.tmdb.org/t/p/w500${
-              movie.belongs_to_collection
-                ? Math.floor(Math.random() * 2) + 1 === 1
-                  ? movie.belongs_to_collection.poster_path
-                  : movie.poster_path
-                : movie.poster_path
-            }`}
-            alt={movie.title}
-            className={styles.poster}
-          />
-        </div>
+      {/* HERO */}
+      <div className="relative h-[70vh] md:h-[90vh] w-full overflow-hidden">
 
-        <div className={styles.info}>
-          <div className={styles.movieName}>
-            <h1>
-              {is18Plus ? <span>(18+) </span> : null}
-              {movie.title} ({movie.release_date.substring(0, 4)})
-            </h1>
-          </div>
+        <img
+          src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
+          className="h-full w-full object-cover"
+          alt={title}
+        />
 
-          <Link className={styles.actionButtons} to={`/watch/${id}`}>
-            <button className={styles.watchNowBtn} >
-              ▶ Watch Now
-            </button>
-          </Link>
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/20" />
 
-          <h2>Overview</h2>
+        <div className="absolute bottom-0 left-0 right-0 px-4 md:px-10 pb-10">
 
-          <p>{movie.overview}</p>
+          <div className="flex flex-col md:flex-row gap-8">
 
-          <h3>Release Date</h3>
+            {/* POSTER */}
+            <img
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              className="hidden md:block w-[220px] rounded-2xl shadow-2xl"
+              alt={title}
+            />
 
-          <p>{movie.release_date}</p>
+            {/* INFO */}
+            <div className="max-w-3xl">
 
-          <h3>Rating :</h3>
+              {/* TAGS */}
+              <div className="flex gap-3 flex-wrap mb-4">
 
-          <p className={styles.rating}>
-            {movie.vote_average.toFixed(1)}
+                <span className="bg-red-600 px-3 py-1 rounded-full text-sm">
+                  {type === "tv"
+                    ? "TV SHOW"
+                    : is18Plus
+                    ? "18+"
+                    : "MOVIE"}
+                </span>
 
-            <span>
-              <FaStar />
-            </span>
-          </p>
+                <span className="bg-yellow-500/20 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                  <FaStar />
+                  {movie.vote_average?.toFixed(1)}
+                </span>
 
-          <h3>Runtime :</h3>
+              </div>
 
-          <p>{movie.runtime} min</p>
+              {/* TITLE */}
+              <h1 className="text-4xl md:text-6xl font-black">
+                {title}
+              </h1>
 
-          <h3>Status :</h3>
+              {/* META */}
+              <div className="flex gap-4 mt-4 text-gray-300 flex-wrap">
 
-          <p>{movie.status}</p>
+                <span className="flex items-center gap-2">
+                  <FaCalendar /> {date}
+                </span>
 
-          <h3>Genres</h3>
+                <span className="flex items-center gap-2">
+                  <FaClock /> {runtime}
+                </span>
 
-          <div className={styles.genres}>
-            {movie.genres.map((genre) => (
-              <span key={genre.id}>{genre.name}</span>
-            ))}
-          </div>
+                <span className="flex items-center gap-2">
+                  <FaCircleCheck /> {movie.status}
+                </span>
 
-          <h3>Where to Watch</h3>
+              </div>
 
-          <div className={styles.watchProviders}>
-            {watchProviders.length > 0 ? (
-              watchProviders.map((provider) => (
-                <div
-                  key={provider.provider_id}
-                  className={styles.provider}
-                >
-                  <img
-                    src={`https://image.tmdb.org/t/p/w92${provider.logo_path}`}
-                    alt={provider.provider_name}
-                  />
+              {/* OVERVIEW */}
+              <p className="mt-6 text-gray-300">
+                {movie.overview}
+              </p>
 
-                  <span>{provider.provider_name}</span>
-                </div>
-              ))
-            ) : (
-              <p>Not available for streaming in your region.</p>
-            )}
+              {/* BUTTON */}
+              <div className="mt-6">
+                <Link to={`/watch/${id}`}>
+                  <button className="bg-red-600 px-6 py-3 rounded-xl flex items-center gap-2">
+                    <FaPlay /> Watch Now
+                  </button>
+                </Link>
+              </div>
+
+            </div>
           </div>
         </div>
       </div>
 
-      <div>
-        <div className={styles.infoSection}>
-          <h2>Trailer</h2>
+      {/* CONTENT */}
+      <div className="px-4 md:px-10 py-10">
 
-          <Trailer id={id} />
-        </div>
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold mb-4">Trailer</h2>
+          <Trailer id={id} type={type} />
+        </section>
 
-        <div className={styles.infoSection}>
-          <div className={styles.sectionHeader}>
-            <h2>Cast</h2>
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold mb-4">Cast</h2>
+          <Cast id={id} type={type} limit={10} />
+        </section>
 
-            <button className={styles.viewMoreBtn}>
-              View All
-            </button>
-          </div>
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold mb-4">Screenshots</h2>
+          <ScreenShots id={id} type={type} limit={5} />
+        </section>
 
-          <Cast id={id} limit={10} />
-        </div>
+        <section>
+          <Moviedetail similar={id} type={type} />
+        </section>
 
-        <div className={styles.infoSection}>
-          <div className={styles.sectionHeader}>
-            <h2>ScreenShots</h2>
-          </div>
-
-          <ScreenShots id={id} limit={5} />
-        </div>
-
-        <div>
-          <Moviedetail similar={id} />
-        </div>
       </div>
     </div>
   );

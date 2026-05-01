@@ -3,10 +3,10 @@ import axios from "axios";
 import styles from "./Cast.module.css";
 import { Config } from "../../config/Config";
 
-const Cast = ({ id, limit = 10 }) => {
+const Cast = ({ id, type, limit = 10 }) => {
   const apiKey = Config.apiKey;
 
-  const castUrl = `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`;
+  const castUrl = `https://api.themoviedb.org/3/${type}/${id}/credits?api_key=${apiKey}`;
 
   const [credits, setCredits] = useState([]);
 
@@ -23,7 +23,7 @@ const Cast = ({ id, limit = 10 }) => {
     };
 
     fetchMovieDetails();
-  }, [id, limit]);
+  }, [id, type, limit]);
 
   return (
     <div className={styles.casts}>

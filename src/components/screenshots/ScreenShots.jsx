@@ -3,12 +3,12 @@ import axios from "axios";
 import styles from "./ScreenShots.module.css";
 import { Config } from "../../config/Config";
 
-const ScreenShots = ({ id, limit = 5 }) => {
+const ScreenShots = ({ id, type, limit = 5 }) => {
   const [images, setImages] = useState([]);
 
   const apiKey = Config.apiKey;
 
-  const imagesUrl = `https://api.themoviedb.org/3/movie/${id}/images?api_key=${apiKey}`;
+  const imagesUrl = `https://api.themoviedb.org/3/${type}/${id}/images?api_key=${apiKey}`;
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -23,7 +23,7 @@ const ScreenShots = ({ id, limit = 5 }) => {
     };
 
     fetchMovieDetails();
-  }, [id, limit]);
+  }, [id, type, limit]);
 
   return (
     <div className={styles.images}>

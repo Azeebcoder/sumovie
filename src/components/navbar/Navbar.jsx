@@ -3,10 +3,10 @@ import styles from "./Navbar.module.css";
 import { Link } from "react-router-dom";
 import { IoIosMenu, IoIosClose } from "react-icons/io";
 import { IoSearchSharp } from "react-icons/io5";
-import { useParams,useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const {type} = useParams();
+  const { type } = useParams();
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false);
 
@@ -23,10 +23,10 @@ const Navbar = () => {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    type ? navigate(`/movies/${type}/${searchQuery}`):navigate(`movies/sumit/${searchQuery}`);
+    type ? navigate(`/movies/${type}/${searchQuery}`) : navigate(`movies/sumit/${searchQuery}`);
     setIsSearchVisible(!isSearchVisible)
     localStorage.removeItem("pageno")
-    setSearchQuery("");    
+    setSearchQuery("");
   };
 
   const handleNavOpen = () => {
@@ -38,7 +38,7 @@ const Navbar = () => {
         {isSearchVisible && <div className={styles.overlay}></div>}{" "}
         {/* Dark background overlay */}
         <button className={styles.searchButton} onClick={handleSearchToggle}>
-        <IoSearchSharp />
+          <IoSearchSharp />
         </button>
         {isSearchVisible && (
           <div className={styles.searchContainer}>
@@ -80,6 +80,9 @@ const Navbar = () => {
           </Link>
           <Link to={"/movies/top_rated"} onClick={handleNavOpen}>
             Top Rated
+          </Link>
+          <Link to={"/movies/tv"} onClick={handleNavOpen}>
+            TV Shows
           </Link>
           <Link to={"/movies/bollywood"} onClick={handleNavOpen}>
             Bollywood

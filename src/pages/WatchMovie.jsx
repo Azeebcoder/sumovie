@@ -34,7 +34,7 @@ export default function WatchMovie() {
   );
 
   return (
-    <div className="min-h-screen bg-[#141414] text-white mt-50">
+    <div className="min-h-screen bg-[#141414] text-white mt-10">
       {/* Background Glow */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-125 bg-linear-to-b from-red-900/20 to-transparent" />

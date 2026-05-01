@@ -10,6 +10,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import SearchMovie from './pages/searchMovie/SearchMovie'
 import Footer from './components/footer/Footer'
 import WatchMovie from './pages/WatchMovie.jsx'
+import InstallPWA from './InstallPWA.jsx'
 
 
 
@@ -17,6 +18,7 @@ const App = () => {
 
   return (
     <>
+      <InstallPWA />
       <SkeletonTheme baseColor='#7e7e7e' highlightColor='#525252'>
         <BrowserRouter>
           <Navbar />

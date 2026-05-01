@@ -1,31 +1,101 @@
+import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  PlayCircle,
+  MonitorPlay,
+  ShieldCheck,
+  Clapperboard,
+} from "lucide-react";
 
 export default function WatchMovie() {
   const { id } = useParams();
+  const [activeServer, setActiveServer] = useState(0);
 
-  // Multiple servers
-  const servers = [
-    `https://vidsrc-embed.ru/embed/movie/${id}`,
-    `https://vidsrc-embed.ru/embed/movie/${id}`,
-    `https://embed.su/embed/movie/${id}`,
-  ];
-
-  const [currentServer, setCurrentServer] = useState(servers[0]);
+  const servers = useMemo(
+    () => [
+      {
+        name: "VidSrc",
+        quality: "4K / Full HD",
+        url: `https://vidsrc-embed.ru/embed/movie/${id}`,
+      },
+      {
+        name: "EmbedSU",
+        quality: "HD Streaming",
+        url: `https://embed.su/embed/movie/${id}`,
+      },
+      {
+        name: "Backup",
+        quality: "Fast Server",
+        url: `https://vidsrc-embed.ru/embed/movie/${id}`,
+      },
+    ],
+    [id]
+  );
 
   return (
-    <div className="min-h-screen bg-black text-white pt-24 px-4 md:px-8">
-      <div className="max-w-7xl mx-auto">
-        {/* PLAYER */}
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-zinc-900 shadow-2xl">
-          {/* Glow */}
-          <div className="absolute inset-0 bg-linear-to-br from-red-500/10 via-orange-500/5 to-transparent pointer-events-none z-0" />
+    <div className="min-h-screen bg-[#141414] text-white mt-50">
+      {/* Background Glow */}
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-125 bg-linear-to-b from-red-900/20 to-transparent" />
+      </div>
+
+      <div className="max-w-400 mx-auto px-4 sm:px-6 lg:px-10 pt-24 pb-10">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -15 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center gap-4 mb-8"
+        >
+          <div className="w-14 h-14 rounded-xl bg-red-600 flex items-center justify-center">
+            <Clapperboard className="w-7 h-7 text-white" />
+          </div>
+
+          <div>
+            <h1 className="text-3xl sm:text-5xl font-bold tracking-tight">
+              Watch Now
+            </h1>
+
+            <p className="text-gray-400 mt-1 text-sm sm:text-base">
+              Stream instantly with multiple servers
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Player */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.35 }}
+          className="relative overflow-hidden rounded-2xl bg-black shadow-[0_20px_80px_rgba(0,0,0,0.6)]"
+        >
+          {/* Top Overlay */}
+          <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-5 sm:px-7 py-4 bg-linear-to-b from-black/80 to-transparent">
+            <div className="flex items-center gap-3">
+              <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
+
+              <div>
+                <h2 className="font-semibold text-lg">
+                  {servers[activeServer].name}
+                </h2>
+
+                <p className="text-xs sm:text-sm text-gray-300">
+                  {servers[activeServer].quality}
+                </p>
+              </div>
+            </div>
+
+            <div className="hidden sm:flex items-center gap-2 text-sm text-gray-300">
+              <ShieldCheck className="w-4 h-4 text-green-400" />
+              Secure Streaming
+            </div>
+          </div>
 
           {/* Video */}
-          <div className="relative aspect-video w-full z-10">
+          <div className="relative w-full aspect-video bg-black">
             <iframe
-              key={currentServer}
-              src={currentServer}
+              key={servers[activeServer].url}
+              src={servers[activeServer].url}
               title="Movie Player"
               className="absolute inset-0 w-full h-full border-0"
               allowFullScreen
@@ -33,106 +103,100 @@ export default function WatchMovie() {
               allow="autoplay; encrypted-media; picture-in-picture"
             />
           </div>
-        </div>
+        </motion.div>
 
-        {/* Server Buttons */}
-        <div className="flex flex-wrap gap-4 mt-6">
-          {servers.map((server, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentServer(server)}
-              className={`px-5 py-3 rounded-xl font-semibold transition duration-300 ${
-                currentServer === server
-                  ? "bg-red-600 hover:bg-red-500"
-                  : "bg-zinc-800 hover:bg-zinc-700"
-              }`}
-            >
-              Server {index + 1}
-            </button>
-          ))}
-        </div>
+        {/* Netflix Style Server List */}
+        <div className="mt-10">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-2xl font-bold">Servers</h2>
 
-        {/* Movie Info */}
-        <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left */}
-          <div className="lg:col-span-2">
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight">
-              Watch Movie
-            </h1>
-
-            <div className="flex flex-wrap items-center gap-3 mt-4 text-sm text-zinc-300">
-              <span className="px-3 py-1 rounded-full bg-red-600 font-semibold">
-                HD
-              </span>
-
-              <span>IMDb ID:</span>
-
-              <span className="font-medium text-white">
-                {id}
-              </span>
-            </div>
-
-            {/* Description */}
-            <div className="mt-8 bg-zinc-900 border border-white/10 rounded-3xl p-6">
-              <h2 className="text-2xl font-bold mb-4">
-                Overview
-              </h2>
-
-              <p className="text-zinc-300 leading-8">
-                Enjoy watching your movie in high quality.
-                If one server does not work, switch to another
-                using the server buttons above.
-              </p>
-            </div>
+            <p className="text-sm text-gray-400">
+              Choose the best streaming server
+            </p>
           </div>
 
-          {/* Right */}
-          <div className="space-y-6">
-            {/* Info Card */}
-            <div className="bg-zinc-900 border border-white/10 rounded-3xl p-6">
-              <h2 className="text-xl font-bold mb-5">
-                Streaming Info
-              </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            {servers.map((server, index) => {
+              const active = activeServer === index;
 
-              <div className="space-y-4 text-sm">
-                <div>
-                  <p className="text-zinc-500">Quality</p>
-                  <p className="font-medium">
-                    HD / Full HD
-                  </p>
-                </div>
+              return (
+                <motion.button
+                  key={server.name}
+                  whileHover={{ scale: 1.015, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setActiveServer(index)}
+                  className="w-full p-2 sm:p-3"
+                >
+                  <div
+                    className={`group relative overflow-hidden rounded border transition-all duration-300
+    ${active
+                        ? "border-red-500/60 bg-[#1e1e1e] shadow-[0_0_25px_rgba(239,68,68,0.15)]"
+                        : "border-white/5 bg-[#171717] hover:border-white/10 hover:bg-[#1d1d1d]"
+                      }`}
+                  >
+                    {/* Glow */}
+                    {active && (
+                      <div className="absolute inset-0 bg-linear-to-br from-red-500/15 via-transparent to-transparent pointer-events-none" />
+                    )}
 
-                <div>
-                  <p className="text-zinc-500">Player</p>
-                  <p className="font-medium">
-                    Embedded Stream
-                  </p>
-                </div>
+                    {/* Proper Inner Padding */}
+                    <div className="relative flex flex-col gap-6 px-5 py-5 sm:px-6 sm:py-6">
 
-                <div>
-                  <p className="text-zinc-500">Movie ID</p>
-                  <p className="font-medium break-all">
-                    {id}
-                  </p>
-                </div>
+                      {/* Top */}
+                      <div className="flex items-center justify-between gap-4">
 
-                <div>
-                  <p className="text-zinc-500">Servers</p>
-                  <p className="font-medium">
-                    {servers.length} Available
-                  </p>
-                </div>
-              </div>
-            </div>
+                        {/* Left Content */}
+                        <div className="flex items-center gap-4 min-w-0">
 
-            {/* Warning */}
-            <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-3xl p-5">
-              <p className="text-sm text-yellow-300 leading-7">
-                If the movie does not load, try changing the
-                server. Some providers may be blocked in your
-                region or browser.
-              </p>
-            </div>
+                          {/* Icon */}
+                          <div
+                            className={`flex items-center justify-center rounded w-14 h-14 shrink-0
+            ${active
+                                ? "bg-red-600 shadow-lg shadow-red-600/20"
+                                : "bg-white/10 group-hover:bg-white/15"
+                              }`}
+                          >
+                            <MonitorPlay className="w-7 h-7 text-white" />
+                          </div>
+
+                          {/* Text */}
+                          <div className="min-w-0">
+                            <h3 className="text-lg sm:text-xl font-semibold text-white truncate">
+                              {server.name}
+                            </h3>
+
+                            <p className="mt-1 text-sm text-gray-400">
+                              {server.quality}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Playing Badge */}
+                        {active && (
+                          <div className="shrink-0 rounded-full bg-red-600/90 px-3 py-1.5 text-[11px] font-semibold tracking-wider text-white">
+                            PLAYING
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Bottom */}
+                      <div className="flex flex-wrap items-center gap-4 border-t border-white/5 pt-4">
+
+                        <div className="flex items-center gap-2 text-sm text-gray-400">
+                          <PlayCircle className="w-4 h-4 text-red-400" />
+                          <span>Fast streaming</span>
+                        </div>
+
+                        <div className="flex items-center gap-2 text-sm text-gray-400">
+                          <MonitorPlay className="w-4 h-4 text-red-400" />
+                          <span>Fullscreen support</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.button>
+              );
+            })}
           </div>
         </div>
       </div>

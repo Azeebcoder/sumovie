@@ -180,7 +180,7 @@ const Moviedetail = ({ search, similar, type: propType }) => {
 
       {/* HEADER */}
       <div className="mb-8 px-4 md:px-8 flex items-center gap-4">
-        <div className="h-14 w-14 flex items-center justify-center rounded-2xl bg-gradient-to-r from-red-600 to-pink-500 text-2xl">
+        <div className="h-14 w-14 flex items-center justify-center rounded-2xl bg-linear-to-r from-red-600 to-pink-500 text-2xl">
           {type === "tv" ? <FaTv /> : <FaFilm />}
         </div>
 
@@ -200,10 +200,10 @@ const Moviedetail = ({ search, similar, type: propType }) => {
       </div>
 
      {/* GRID */}
-<div className="w-full flex justify-center px-2 sm:px-4 md:px-6">
+<div className="w-[80%] flex justify-center px-2 sm:px-4 md:px-6 m-auto">
   <div className="
   w-full 
-  max-w-[1300px]
+  max-w-325
   grid 
   grid-cols-2 
   sm:grid-cols-3 

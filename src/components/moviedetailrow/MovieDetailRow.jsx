@@ -139,7 +139,7 @@ const MovieDetailRow = ({ type }) => {
           <div
             className={`
               flex h-11 w-11 items-center justify-center
-              rounded-2xl bg-gradient-to-r ${section.color}
+              rounded-2xl bg-linear-to-r ${section.color}
               text-lg text-white shadow-lg
             `}
           >
@@ -184,9 +184,9 @@ const MovieDetailRow = ({ type }) => {
             <div
               className="
                 absolute inset-0
-                bg-gradient-to-r from-red-500/0 via-red-500/10 to-red-500/0
-                translate-x-[-100%]
-                group-hover:translate-x-[100%]
+                bg-linear-to-r from-red-500/0 via-red-500/10 to-red-500/0
+                -translate-x-full
+                group-hover:translate-x-full
                 transition-transform duration-1000
               "
             />
@@ -238,7 +238,7 @@ const MovieDetailRow = ({ type }) => {
                   duration: 0.4,
                   delay: index * 0.04,
                 }}
-                className="flex-shrink-0"
+                className="shrink-0"
               >
                 <Link to={`/${isTv ? "tv" : "movie"}/${movie.id}`}>
                   <MovieCard movie={movie} />
@@ -250,7 +250,7 @@ const MovieDetailRow = ({ type }) => {
       </div>
 
       {/* FADE EFFECT */}
-      <div className="pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-black to-transparent" />
+      <div className="pointer-events-none absolute right-0 top-0 h-full w-16 bg-linear-to-l from-black to-transparent" />
     </section>
   );
 };

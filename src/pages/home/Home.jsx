@@ -205,19 +205,46 @@ const Home = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
 
           {[
-            { title: "Trending", icon: <HiTrendingUp />, color: "from-red-600 to-orange-500" },
-            { title: "TV Shows", icon: <FaTv />, color: "from-blue-600 to-cyan-500" },
-            { title: "Movies", icon: <FaFilm />, color: "from-purple-600 to-pink-500" },
-            { title: "New & Hot", icon: <HiSparkles />, color: "from-green-600 to-emerald-500" },
+            {
+              title: "Trending",
+              icon: <HiTrendingUp />,
+              color: "from-red-600 to-orange-500",
+              link: "/movies/popular",
+            },
+            {
+              title: "TV Shows",
+              icon: <FaTv />,
+              color: "from-blue-600 to-cyan-500",
+              link: "/movies/tv",
+            },
+            {
+              title: "Movies",
+              icon: <FaFilm />,
+              color: "from-purple-600 to-pink-500",
+              link: "/movies/top_rated",
+            },
+            {
+              title: "New & Hot",
+              icon: <HiSparkles />,
+              color: "from-green-600 to-emerald-500",
+              link: "/movies/upcoming",
+            },
           ].map((item, index) => (
-            <motion.div
-              key={index}
-              whileHover={{ scale: 1.03 }}
-              className={`bg-linear-to-r ${item.color} rounded-2xl p-4`}
-            >
-              <div className="text-xl sm:text-2xl mb-2">{item.icon}</div>
-              <h3 className="text-sm sm:text-lg font-bold">{item.title}</h3>
-            </motion.div>
+            <Link key={index} to={item.link}>
+              <motion.div
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className={`bg-linear-to-r ${item.color} rounded-2xl p-4 cursor-pointer`}
+              >
+                <div className="text-xl sm:text-2xl mb-2">
+                  {item.icon}
+                </div>
+
+                <h3 className="text-sm sm:text-lg font-bold">
+                  {item.title}
+                </h3>
+              </motion.div>
+            </Link>
           ))}
 
         </div>

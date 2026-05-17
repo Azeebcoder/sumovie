@@ -82,6 +82,7 @@ const Moviedetail = ({ search, similar, type: propType }) => {
           .slice(0, 24);
 
         setMovieList(combined);
+        
 
         setTotalResults(
           movieRes.data.total_results + tvRes.data.total_results
@@ -175,6 +176,8 @@ const Moviedetail = ({ search, similar, type: propType }) => {
   // ========================
   // UI
   // ========================
+
+  console.log(movieList);
   return (
     <div className="min-h-screen bg-black text-white pt-24 pb-16">
 
@@ -189,8 +192,8 @@ const Moviedetail = ({ search, similar, type: propType }) => {
             {search
               ? `Results for "${search}"`
               : type === "tv"
-                ? "Similar TV Shows"
-                : "Similar Movies"}
+                ? `${type.charAt(0).toUpperCase() + type.slice(1)} Shows`
+                : `${type.charAt(0).toUpperCase() + type.slice(1)} Movies`}
           </h1>
 
           <p className="text-gray-400 text-sm">
@@ -216,6 +219,8 @@ const Moviedetail = ({ search, similar, type: propType }) => {
   lg:gap-6
 ">
 
+  {console.log(movieList)}
+
     {loading ? (
       <div className="col-span-full">
         <SkeletonCard cards={10} />
@@ -223,8 +228,7 @@ const Moviedetail = ({ search, similar, type: propType }) => {
     ) : (
       movieList.map((movie, index) => {
 
-        const isTv = type === "tv";
-        const linkType = isTv ? "tv" : "movie";
+        const linkType = movie.name ? "tv" : "movie";
 
         return (
           <motion.div

@@ -11,6 +11,7 @@ import SearchMovie from './pages/searchMovie/SearchMovie'
 import Footer from './components/footer/Footer'
 import WatchMovie from './pages/WatchMovie.jsx'
 import InstallPWA from './InstallPWA.jsx'
+import WatchTV from './pages/WatchTv.jsx'
 
 
 
@@ -28,7 +29,8 @@ const App = () => {
             <Route path="/tv/:id" element={<MovieInfo type="tv" />} />
             <Route path='/movies/:type' element={<Moviedetail />} />
             <Route path='/movies/:type/:search' element={<SearchMovie />} />
-            <Route path='/watch/:id' element={<WatchMovie />} />
+            <Route path='/watch/movie/:id' element={<WatchMovie />} />
+            <Route path='/watch/tv/:id' element={<WatchTV />} />
 
           </Routes>
           <Footer />

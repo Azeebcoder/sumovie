@@ -236,7 +236,7 @@ const Home = () => {
         <MovieDetailRow type={"top_rated"} />
       </section>
 
-      <section className="mt-10 md:mt-14 px-2 sm:px-4 md:px-10">
+      <section className="mt-10 md:mt-12">
         <MovieDetailRow type={"tv"} />
       </section>
 

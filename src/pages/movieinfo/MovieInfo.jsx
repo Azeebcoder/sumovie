@@ -231,12 +231,12 @@ const MovieInfo = () => {
 
               {/* BUTTON */}
               <div className="mt-6">
-                <Link to={`/watch/${id}`}>
-                  <button className="bg-red-600 px-6 py-3 rounded-xl flex items-center gap-2">
-                    <FaPlay /> Watch Now
-                  </button>
-                </Link>
-              </div>
+  <Link to={type === "movie" ? `/watch/movie/${id}` : `/watch/tv/${id}`}>
+    <button className="bg-red-600 px-6 py-3 rounded-xl flex items-center gap-2">
+      <FaPlay /> Watch Now
+    </button>
+  </Link>
+</div>
 
             </div>
           </div>

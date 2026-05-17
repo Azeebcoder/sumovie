@@ -54,7 +54,7 @@ export default function InstallPWA() {
             "
           >
             {/* Icon */}
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-xl bg-linear-to-tr from-purple-500 to-pink-500 flex items-center justify-center font-bold">
               +
             </div>
 

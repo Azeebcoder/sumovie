@@ -10,19 +10,16 @@ import {
   FaCircleCheck,
 } from "react-icons/fa6";
 
-import { Config } from "../../config/Config.js";
+import { Config } from "../config/Config.js";
 
-import Moviedetail from "../movieDetail/Moviedetail.jsx";
-import Trailer from "../../components/trailer/Trailer.jsx";
-import Cast from "../../components/cast/Cast.jsx";
-import ScreenShots from "../../components/screenshots/ScreenShots.jsx";
+import Moviedetail from "./Moviedetail.jsx";
+import Trailer from "../components/trailer/Trailer.jsx";
 
 const MovieInfo = () => {
   const { id, type: routeType } = useParams();
   const { pathname } = useLocation();
 
   const [movie, setMovie] = useState(null);
-  const [watchProviders, setWatchProviders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [is18Plus, setIs18Plus] = useState(false);
@@ -43,11 +40,6 @@ const MovieInfo = () => {
       ? `https://api.themoviedb.org/3/tv/${id}?api_key=${apiKey}&language=en-US`
       : `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=en-US`;
 
-  const providerUrl =
-    type === "tv"
-      ? `https://api.themoviedb.org/3/tv/${id}/watch/providers?api_key=${apiKey}`
-      : `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${apiKey}`;
-
   const releaseDatesUrl =
     type === "movie"
       ? `https://api.themoviedb.org/3/movie/${id}/release_dates?api_key=${apiKey}`
@@ -56,9 +48,9 @@ const MovieInfo = () => {
   // =========================
   // SCROLL TOP
   // =========================
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [pathname]);
+  // useEffect(() => {
+  //   window.scrollTo({ top: 0, behavior: "smooth" });
+  // }, [pathname]);
 
   // =========================
   // FETCH DATA
@@ -68,10 +60,7 @@ const MovieInfo = () => {
       try {
         setLoading(true);
 
-        const requests = [
-          axios.get(baseUrl),
-          axios.get(providerUrl),
-        ];
+       const requests = [axios.get(baseUrl)];
 
         if (releaseDatesUrl) {
           requests.push(axios.get(releaseDatesUrl));
@@ -80,15 +69,8 @@ const MovieInfo = () => {
         const responses = await Promise.all(requests);
 
         const mainData = responses[0].data;
-        const providerData = responses[1].data;
 
         setMovie(mainData);
-
-        // =========================
-        // WATCH PROVIDERS
-        // =========================
-        const providers = providerData?.results?.IN || {};
-        setWatchProviders(providers.flatrate || []);
 
         // =========================
         // 18+ CHECK (MOVIE ONLY)
@@ -251,7 +233,7 @@ const MovieInfo = () => {
           <Trailer id={id} type={type} />
         </section>
 
-        <section className="mb-16">
+        {/* <section className="mb-16">
           <h2 className="text-3xl font-bold mb-4">Cast</h2>
           <Cast id={id} type={type} limit={10} />
         </section>
@@ -259,7 +241,7 @@ const MovieInfo = () => {
         <section className="mb-16">
           <h2 className="text-3xl font-bold mb-4">Screenshots</h2>
           <ScreenShots id={id} type={type} limit={5} />
-        </section>
+        </section> */}
 
         
 

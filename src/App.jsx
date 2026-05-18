@@ -1,14 +1,14 @@
 import React from 'react'
 import './App.css'
-import Home from './pages/home/Home'
+import Home from './pages/Home.jsx'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Moviedetail from './pages/movieDetail/Moviedetail'
-import Navbar from './components/navbar/Navbar'
-import MovieInfo from './pages/movieinfo/MovieInfo'
+import Moviedetail from './pages/Moviedetail.jsx'
+import Navbar from './components/Navbar.jsx'
+import MovieInfo from './pages/MovieInfo.jsx'
 import { SkeletonTheme } from 'react-loading-skeleton';
 import "react-loading-skeleton/dist/skeleton.css";
-import SearchMovie from './pages/searchMovie/SearchMovie'
-import Footer from './components/footer/Footer'
+import SearchMovie from './pages/SearchMovie.jsx'
+import Footer from './components/Footer.jsx'
 import WatchMovie from './pages/WatchMovie.jsx'
 import InstallPWA from './InstallPWA.jsx'
 import WatchTV from './pages/WatchTv.jsx'
@@ -25,8 +25,8 @@ const App = () => {
           <Navbar />
           <Routes>
             <Route path='/' element={<Home />} />
-            <Route path="/movie/:id" element={<MovieInfo type="movie" />} />
-            <Route path="/tv/:id" element={<MovieInfo type="tv" />} />
+            <Route path="/movie/:id" element={<MovieInfo type="movie" similar={true} />} />
+            <Route path="/tv/:id" element={<MovieInfo type="tv" similar={true} />} />
             <Route path='/movies/:type' element={<Moviedetail />} />
             <Route path='/movies/:type/:search' element={<SearchMovie />} />
             <Route path='/watch/movie/:id' element={<WatchMovie />} />

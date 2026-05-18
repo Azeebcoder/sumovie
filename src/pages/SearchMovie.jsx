@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Moviedetail from '../movieDetail/Moviedetail';
+import Moviedetail from './Moviedetail.jsx';
 
 const SearchMovie = () => {
   const { search } = useParams(); // Get 'search' from the route parameters

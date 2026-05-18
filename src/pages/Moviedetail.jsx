@@ -12,9 +12,9 @@ import {
   FaTv,
 } from "react-icons/fa6";
 
-import MovieCard from "../../components/moviecard/MovieCard";
-import SkeletonCard from "../../components/SkeletonCard";
-import { Config } from "../../config/Config";
+import MovieCard from "../components/MovieCard";
+import SkeletonCard from "../components/SkeletonCard";
+import { Config } from "../config/Config";
 
 const Moviedetail = ({ search, similar, type: propType }) => {
   const { type: routeType } = useParams();
@@ -79,10 +79,10 @@ const Moviedetail = ({ search, similar, type: propType }) => {
 
         const combined = [...movies, ...tv]
           .sort((a, b) => b.popularity - a.popularity)
-          .slice(0, 24);
+          .slice(0, 25);
 
         setMovieList(combined);
-        
+
 
         setTotalResults(
           movieRes.data.total_results + tvRes.data.total_results
@@ -177,93 +177,135 @@ const Moviedetail = ({ search, similar, type: propType }) => {
   // UI
   // ========================
 
-  console.log(movieList);
   return (
-    <div className="min-h-screen bg-black text-white pt-24 pb-16">
+    <div className="min-h-screen bg-black text-white pt-24 pb-20">
 
       {/* HEADER */}
-      <div className="mb-8 px-4 md:px-8 flex items-center gap-4">
-        <div className="h-14 w-14 flex items-center justify-center rounded-2xl bg-linear-to-r from-red-600 to-pink-500 text-2xl">
-          {type === "tv" ? <FaTv /> : <FaFilm />}
-        </div>
+      <div className="px-4 md:px-10 mb-12">
 
-        <div>
-          <h1 className="text-2xl md:text-4xl font-black">
-            {search
-              ? `Results for "${search}"`
-              : type === "tv"
-                ? `${type.charAt(0).toUpperCase() + type.slice(1)} Shows`
-                : `${type.charAt(0).toUpperCase() + type.slice(1)} Movies`}
-          </h1>
+  {/* TOP BADGE LINE */}
+  <div className="flex items-center gap-3 mb-3">
 
-          <p className="text-gray-400 text-sm">
-            Movies + TV Shows supported
-          </p>
-        </div>
-      </div>
+    <div className="h-9 w-9 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-red-500 backdrop-blur-md">
+      {type === "tv" ? <FaTv /> : <FaFilm />}
+    </div>
 
-     {/* GRID */}
-<div className="w-[80%] flex justify-center px-2 sm:px-4 md:px-6 m-auto">
-  <div className="
-  w-full 
-  max-w-325
-  grid 
-  grid-cols-2 
-  sm:grid-cols-3 
-  md:grid-cols-4 
-  lg:grid-cols-5 
-
-  gap-3 
-  sm:gap-4 
-  md:gap-5 
-  lg:gap-6
-">
-
-  {console.log(movieList)}
-
-    {loading ? (
-      <div className="col-span-full">
-        <SkeletonCard cards={10} />
-      </div>
-    ) : (
-      movieList.map((movie, index) => {
-
-        const linkType = movie.name ? "tv" : "movie";
-
-        return (
-          <motion.div
-            key={movie.id}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.25,
-              delay: index * 0.015,
-            }}
-            className="w-full flex justify-center"
-          >
-            <Link to={`/${linkType}/${movie.id}`}>
-              {/* 🔥 make card slightly bigger on mobile */}
-              <div className="w-full sm:w-full scale-[1.03] sm:scale-100">
-                <MovieCard movie={movie} />
-              </div>
-            </Link>
-          </motion.div>
-        );
-      })
-    )}
+    <p className="text-xs tracking-[0.35em] uppercase text-gray-400">
+      {search
+        ? "Search Results"
+        : similar
+          ? "Recommended Content"
+          : "Browse Collection"}
+    </p>
 
   </div>
+
+  {/* TITLE BLOCK */}
+  <div className="relative">
+
+    {/* subtle glow line */}
+    <div className="absolute left-0 top-0 h-full w-[3px] bg-gradient-to-b from-red-500 to-transparent rounded-full" />
+
+    <div className="pl-4">
+
+      <h1 className="text-3xl md:text-5xl font-black text-white leading-tight tracking-tight">
+
+        {search
+          ? `“${search}”`
+          : similar
+            ? `Similar ${type === "tv" ? "Shows" : "Movies"}`
+            : type === "tv"
+              ? "TV Shows Collection"
+              : "Movies Collection"}
+
+      </h1>
+
+      <p className="mt-3 text-sm md:text-base text-gray-400 max-w-xl">
+        Discover hand-picked entertainment tailored for your viewing experience.
+      </p>
+
+    </div>
+
+  </div>
+
 </div>
+
+      {/* CONTENT WRAPPER */}
+      <div className="w-full flex justify-center px-4">
+
+        <div className="w-full max-w-7xl">
+
+          {/* GRID */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+
+            {loading ? (
+
+              <div className="col-span-full flex flex-col items-center justify-center min-h-[60vh]">
+
+                {/* SPINNER */}
+                <div className="relative flex items-center justify-center">
+
+                  <div className="h-14 w-14 animate-spin rounded-full border-4 border-red-600 border-t-transparent" />
+
+                  <div className="absolute h-20 w-20 rounded-full border border-red-500/20 animate-ping" />
+
+                </div>
+
+                <p className="mt-4 text-sm text-gray-400 animate-pulse">
+                  Loading cinematic universe...
+                </p>
+
+              </div>
+
+            ) : (
+
+              movieList.map((movie, index) => {
+
+                const linkType = movie.name ? "tv" : "movie";
+
+                return (
+                  <motion.div
+                    key={movie.id}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.25,
+                      delay: index * 0.02,
+                    }}
+                    className="flex justify-center"
+                  >
+
+                    <Link to={`/${linkType}/${movie.id}`} className="w-full">
+
+                      <div className="w-full hover:scale-[1.03] transition-transform duration-300">
+
+                        <MovieCard movie={movie} />
+
+                      </div>
+
+                    </Link>
+
+                  </motion.div>
+                );
+              })
+
+            )}
+
+          </div>
+
+        </div>
+
+      </div>
 
       {/* PAGINATION */}
       {totalPages > 1 && (
-        <div className="mt-14 flex justify-center">
-          <div className="flex items-center gap-2 bg-[#111] p-2 rounded-2xl border border-white/10">
+        <div className="mt-16 flex justify-center px-4">
+
+          <div className="flex items-center gap-2 bg-white/5 border border-white/10 backdrop-blur-md p-2 rounded-2xl">
 
             <button
-              onClick={() =>
-                setCurrentPage((p) => Math.max(p - 1, 1))
-              }
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+              className="p-2 hover:bg-white/10 rounded-xl transition"
             >
               <FaArrowLeft />
             </button>
@@ -282,9 +324,10 @@ const Moviedetail = ({ search, similar, type: propType }) => {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`h-10 w-10 rounded-xl ${currentPage === page
-                    ? "bg-red-600"
-                    : "bg-white/5"
+                  className={`h-10 w-10 rounded-xl font-medium transition
+                  ${currentPage === page
+                      ? "bg-red-600 text-white"
+                      : "bg-white/5 text-gray-300 hover:bg-white/10"
                     }`}
                 >
                   {page}
@@ -294,15 +337,15 @@ const Moviedetail = ({ search, similar, type: propType }) => {
 
             <button
               onClick={() =>
-                setCurrentPage((p) =>
-                  Math.min(p + 1, totalPages)
-                )
+                setCurrentPage((p) => Math.min(p + 1, totalPages))
               }
+              className="p-2 hover:bg-white/10 rounded-xl transition"
             >
               <FaArrowRight />
             </button>
 
           </div>
+
         </div>
       )}
 

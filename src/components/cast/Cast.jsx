@@ -3,7 +3,7 @@ import axios from "axios";
 import styles from "./Cast.module.css";
 import { Config } from "../../config/Config";
 
-const Cast = ({ id, type, limit = 10 }) => {
+const Cast = ({ id, type, limit = 12 }) => {
   const apiKey = Config.apiKey;
 
   const castUrl = `https://api.themoviedb.org/3/${type}/${id}/credits?api_key=${apiKey}`;

@@ -167,8 +167,8 @@ const MovieInfo = () => {
           alt={title}
         />
 
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/20" />
+        <div className="absolute inset-0 bg-linear-to-r from-black via-black/70 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black via-black/30 to-black/20" />
 
         <div className="absolute bottom-0 left-0 right-0 px-4 md:px-10 pb-10">
 
@@ -177,7 +177,7 @@ const MovieInfo = () => {
             {/* POSTER */}
             <img
               src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              className="hidden md:block w-[220px] rounded-2xl shadow-2xl"
+              className="hidden md:block w-55 rounded-2xl shadow-2xl"
               alt={title}
             />
 
@@ -191,8 +191,8 @@ const MovieInfo = () => {
                   {type === "tv"
                     ? "TV SHOW"
                     : is18Plus
-                    ? "18+"
-                    : "MOVIE"}
+                      ? "18+"
+                      : "MOVIE"}
                 </span>
 
                 <span className="bg-yellow-500/20 px-3 py-1 rounded-full text-sm flex items-center gap-2">
@@ -231,12 +231,12 @@ const MovieInfo = () => {
 
               {/* BUTTON */}
               <div className="mt-6">
-  <Link to={type === "movie" ? `/watch/movie/${id}` : `/watch/tv/${id}`}>
-    <button className="bg-red-600 px-6 py-3 rounded-xl flex items-center gap-2">
-      <FaPlay /> Watch Now
-    </button>
-  </Link>
-</div>
+                <Link to={type === "movie" ? `/watch/movie/${id}` : `/watch/tv/${id}`}>
+                  <button className="bg-red-600 px-6 py-3 rounded-xl flex items-center gap-2">
+                    <FaPlay /> Watch Now
+                  </button>
+                </Link>
+              </div>
 
             </div>
           </div>
@@ -261,9 +261,10 @@ const MovieInfo = () => {
           <ScreenShots id={id} type={type} limit={5} />
         </section>
 
-          <Moviedetail similar={id} type={type} />
+        
 
       </div>
+      <Moviedetail similar={id} type={type} />
     </div>
   );
 };

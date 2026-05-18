@@ -158,7 +158,7 @@ const Home = () => {
                     </div>
 
                     {/* TITLE */}
-                    <h1 className="text-2xl sm:text-4xl md:text-7xl font-black leading-tight mb-3">
+                    <h1 className="text-2xl sm:text-4xl md:text-7xl font-black leading-tight mb-3 text-left">
                       {movie.title}
                     </h1>
 

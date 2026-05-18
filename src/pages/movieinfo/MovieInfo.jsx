@@ -261,9 +261,7 @@ const MovieInfo = () => {
           <ScreenShots id={id} type={type} limit={5} />
         </section>
 
-        <section>
           <Moviedetail similar={id} type={type} />
-        </section>
 
       </div>
     </div>

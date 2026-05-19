@@ -183,52 +183,52 @@ const Moviedetail = ({ search, similar, type: propType }) => {
       {/* HEADER */}
       <div className="px-4 md:px-10 mb-12">
 
-  {/* TOP BADGE LINE */}
-  <div className="flex items-center gap-3 mb-3">
+        {/* TOP BADGE LINE */}
+        <div className="flex items-center gap-3 mb-3">
 
-    <div className="h-9 w-9 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-red-500 backdrop-blur-md">
-      {type === "tv" ? <FaTv /> : <FaFilm />}
-    </div>
+          <div className="h-9 w-9 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-red-500 backdrop-blur-md">
+            {type === "tv" ? <FaTv /> : <FaFilm />}
+          </div>
 
-    <p className="text-xs tracking-[0.35em] uppercase text-gray-400">
-      {search
-        ? "Search Results"
-        : similar
-          ? "Recommended Content"
-          : "Browse Collection"}
-    </p>
+          <p className="text-xs tracking-[0.35em] uppercase text-gray-400">
+            {search
+              ? "Search Results"
+              : similar
+                ? "Recommended Content"
+                : "Browse Collection"}
+          </p>
 
-  </div>
+        </div>
 
-  {/* TITLE BLOCK */}
-  <div className="relative">
+        {/* TITLE BLOCK */}
+        <div className="relative">
 
-    {/* subtle glow line */}
-    <div className="absolute left-0 top-0 h-full w-[3px] bg-gradient-to-b from-red-500 to-transparent rounded-full" />
+          {/* subtle glow line */}
+          <div className="absolute left-0 top-0 h-full w-[3px] bg-gradient-to-b from-red-500 to-transparent rounded-full" />
 
-    <div className="pl-4">
+          <div className="pl-4">
 
-      <h1 className="text-3xl md:text-5xl font-black text-white leading-tight tracking-tight">
+            <h1 className="text-3xl md:text-5xl font-black text-white leading-tight tracking-tight">
 
-        {search
-          ? `“${search}”`
-          : similar
-            ? `Similar ${type === "tv" ? "Shows" : "Movies"}`
-            : type === "tv"
-              ? "TV Shows Collection"
-              : "Movies Collection"}
+              {search
+                ? `“${search}”`
+                : similar
+                  ? `Similar ${type === "tv" ? "Shows" : "Movies"}`
+                  : type === "tv"
+                    ? "TV Shows Collection"
+                    : "Movies Collection"}
 
-      </h1>
+            </h1>
 
-      <p className="mt-3 text-sm md:text-base text-gray-400 max-w-xl">
-        Discover hand-picked entertainment tailored for your viewing experience.
-      </p>
+            <p className="mt-3 text-sm md:text-base text-gray-400 max-w-xl">
+              Discover hand-picked entertainment tailored for your viewing experience.
+            </p>
 
-    </div>
+          </div>
 
-  </div>
+        </div>
 
-</div>
+      </div>
 
       {/* CONTENT WRAPPER */}
       <div className="w-full flex justify-center px-4">
@@ -236,22 +236,22 @@ const Moviedetail = ({ search, similar, type: propType }) => {
         <div className="w-full max-w-7xl">
 
           {/* GRID */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 md:gap-6">
 
             {loading ? (
 
-              <div className="col-span-full flex flex-col items-center justify-center min-h-[60vh]">
+              <div className="col-span-full flex min-h-[60vh] flex-col items-center justify-center">
 
                 {/* SPINNER */}
                 <div className="relative flex items-center justify-center">
 
                   <div className="h-14 w-14 animate-spin rounded-full border-4 border-red-600 border-t-transparent" />
 
-                  <div className="absolute h-20 w-20 rounded-full border border-red-500/20 animate-ping" />
+                  <div className="absolute h-20 w-20 animate-ping rounded-full border border-red-500/20" />
 
                 </div>
 
-                <p className="mt-4 text-sm text-gray-400 animate-pulse">
+                <p className="mt-4 animate-pulse text-sm text-gray-400">
                   Loading cinematic universe...
                 </p>
 
@@ -261,38 +261,17 @@ const Moviedetail = ({ search, similar, type: propType }) => {
 
               movieList.map((movie, index) => {
 
-                const linkType = movie.name ? "tv" : "movie";
+                const linkType =
+                  movie.name ? "tv" : "movie";
 
                 return (
-                  <motion.div
-                    key={movie.id}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      duration: 0.25,
-                      delay: index * 0.02,
-                    }}
-                    className="flex justify-center"
-                  >
-
-                    <Link to={`/${linkType}/${movie.id}`} className="w-full">
-
-                      <div className="w-full hover:scale-[1.03] transition-transform duration-300">
-
-                        <MovieCard movie={movie} />
-
-                      </div>
-
-                    </Link>
-
-                  </motion.div>
+                  <MovieCard key={movie.id} movie={movie} type={linkType} index={index} total={movieList.length} /> 
                 );
               })
 
             )}
 
           </div>
-
         </div>
 
       </div>

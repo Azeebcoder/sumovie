@@ -23,7 +23,17 @@ import {
   FaStar,
   FaCompass,
   FaPlay,
+  FaHouse,
 } from "react-icons/fa6";
+
+// import {
+//   FaHouse,
+//   FaCompass,
+//   FaTv,
+//   FaFire,
+//   FaStar,
+//   FaUser,
+// } from "react-icons/fa6";
 
 const Navbar = () => {
   const { type } = useParams();
@@ -35,6 +45,12 @@ const Navbar = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
+
+  const [suggestions, setSuggestions] = useState([]);
+  const [loadingSuggestions, setLoadingSuggestions] =
+    useState(false);
+  const [showSuggestions, setShowSuggestions] =
+    useState(false);
 
   // SCROLL EFFECT
   useEffect(() => {
@@ -63,6 +79,38 @@ const Navbar = () => {
   useEffect(() => {
     setIsOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (!searchQuery.trim()) {
+        setSuggestions([]);
+        return;
+      }
+
+      try {
+        setLoadingSuggestions(true);
+
+        const res = await fetch(
+          `https://api.themoviedb.org/3/search/multi?api_key=${import.meta.env.VITE_API_KEY
+          }&query=${searchQuery}`
+        );
+
+        const data = await res.json();
+
+        setSuggestions(data.results?.slice(0, 6) || []);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoadingSuggestions(false);
+      }
+    };
+
+    const debounce = setTimeout(() => {
+      fetchSuggestions();
+    }, 350);
+
+    return () => clearTimeout(debounce);
+  }, [searchQuery]);
 
   // SEARCH
   const handleSearchSubmit = (e) => {
@@ -117,11 +165,10 @@ const Navbar = () => {
     <>
       {/* NAVBAR */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled
-            ? "border-b border-white/10 bg-black/70 shadow-2xl backdrop-blur-3xl"
-            : "bg-linear-to-b from-black/95 via-black/60 to-transparent"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
+          ? "border-b border-white/10 bg-black/70 shadow-2xl backdrop-blur-3xl"
+          : "bg-linear-to-b from-black/95 via-black/60 to-transparent"
+          }`}
       >
 
         {/* GRADIENT GLOW */}
@@ -175,11 +222,10 @@ const Navbar = () => {
                   <Link
                     key={link.name}
                     to={link.path}
-                    className={`group relative flex items-center gap-2 overflow-hidden rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-300 ${
-                      isActive
-                        ? "bg-white text-black shadow-xl"
-                        : "text-gray-300 hover:bg-white/10 hover:text-white"
-                    }`}
+                    className={`group relative flex items-center gap-2 overflow-hidden rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-300 ${isActive
+                      ? "bg-white text-black shadow-xl"
+                      : "text-gray-300 hover:bg-white/10 hover:text-white"
+                      }`}
                   >
 
                     <span className="text-base">
@@ -200,26 +246,130 @@ const Navbar = () => {
           </div>
 
           {/* SEARCH DESKTOP */}
-          <div className="hidden max-w-xl flex-1 px-8 lg:flex">
+          <div className="hidden max-w-2xl flex-1 px-8 lg:flex">
 
-            <form
-              onSubmit={handleSearchSubmit}
-              className="relative w-full"
-            >
+            <div className="relative w-full">
 
-              <IoSearchSharp className="absolute left-5 top-1/2 -translate-y-1/2 text-xl text-gray-400" />
+              {/* SEARCH BAR */}
+              <form
+                onSubmit={handleSearchSubmit}
+                className="group relative"
+              >
 
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) =>
-                  setSearchQuery(e.target.value)
-                }
-                placeholder="Search movies, anime, TV shows..."
-                className="h-12 w-full rounded-full border border-white/10 bg-white/5 pl-14 pr-5 text-sm text-white outline-none backdrop-blur-xl transition-all duration-300 placeholder:text-gray-500 focus:border-red-500 focus:bg-white/10"
-              />
+                {/* GLOW */}
+                <div className="absolute inset-0 rounded-full bg-red-600/10 opacity-0 blur-2xl transition-all duration-500 group-focus-within:opacity-100" />
 
-            </form>
+                <IoSearchSharp className="absolute left-5 top-1/2 z-10 -translate-y-1/2 text-xl text-gray-400 transition-all duration-300 group-focus-within:text-red-400" />
+
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) =>
+                    setSearchQuery(e.target.value)
+                  }
+                  onFocus={() =>
+                    setShowSuggestions(true)
+                  }
+                  onBlur={() =>
+                    setTimeout(() => {
+                      setShowSuggestions(false);
+                    }, 200)
+                  }
+                  placeholder="Search movies, anime, TV shows..."
+                  className="h-13 w-full rounded-full border border-white/10 bg-white/5 pl-14 pr-6 text-sm text-white outline-none backdrop-blur-2xl transition-all duration-300 placeholder:text-gray-500 focus:border-red-500 focus:bg-white/10"
+                />
+
+              </form>
+
+              {/* SUGGESTIONS */}
+              <div
+                className={`absolute left-0 right-0 top-16 z-50 overflow-hidden rounded-3xl border border-white/10 bg-black/80 shadow-2xl backdrop-blur-3xl transition-all duration-300 ${showSuggestions &&
+                  searchQuery &&
+                  suggestions.length > 0
+                  ? "visible translate-y-0 opacity-100"
+                  : "invisible -translate-y-2 opacity-0"
+                  }`}
+              >
+
+                {/* LOADING */}
+                {loadingSuggestions && (
+                  <div className="p-5 text-sm text-gray-400">
+                    Searching...
+                  </div>
+                )}
+
+                {/* RESULTS */}
+                {!loadingSuggestions &&
+                  suggestions.map((item) => (
+                    <Link
+                      key={item.id}
+                      to={`/${item.media_type === "tv"
+                        ? "tv"
+                        : "movie"
+                        }/${item.id}`}
+                      onClick={() => {
+                        setShowSuggestions(false);
+                        setSearchQuery("");
+                      }}
+                      className="group flex items-center gap-4 border-b border-white/5 p-4 transition-all duration-300 hover:bg-white/5"
+                    >
+
+                      {/* POSTER */}
+                      <img
+                        src={
+                          item.poster_path
+                            ? `https://image.tmdb.org/t/p/w200${item.poster_path}`
+                            : "https://placehold.co/200x300/111/FFF?text=No+Image"
+                        }
+                        alt={item.title || item.name}
+                        className="h-16 w-12 rounded-xl object-cover"
+                      />
+
+                      {/* INFO */}
+                      <div className="flex-1 text-left">
+
+                        <h3 className="line-clamp-1 text-sm font-semibold text-white transition-all duration-300 group-hover:text-red-400">
+                          {item.title || item.name}
+                        </h3>
+
+                        <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
+
+                          <span className="capitalize">
+                            {item.media_type}
+                          </span>
+
+                          <span className="h-1 w-1 rounded-full bg-gray-500" />
+
+                          <span>
+                            {(
+                              item.release_date ||
+                              item.first_air_date ||
+                              ""
+                            ).split("-")[0]}
+                          </span>
+
+                        </div>
+                      </div>
+
+                      {/* ARROW */}
+                      <div className="translate-x-2 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+                        <FaPlay className="text-red-500" />
+                      </div>
+
+                    </Link>
+                  ))}
+
+                {/* EMPTY */}
+                {!loadingSuggestions &&
+                  searchQuery &&
+                  suggestions.length === 0 && (
+                    <div className="p-5 text-sm text-gray-400">
+                      No results found
+                    </div>
+                  )}
+
+              </div>
+            </div>
           </div>
 
           {/* RIGHT */}
@@ -265,185 +415,295 @@ const Navbar = () => {
 
             </button>
 
-            {/* MENU BUTTON */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-3xl text-white backdrop-blur-xl transition-all duration-300 hover:bg-red-600 xl:hidden"
-            >
-              {isOpen
-                ? <IoIosClose />
-                : <IoIosMenu />}
-            </button>
+            
 
           </div>
         </div>
 
         {/* MOBILE SEARCH */}
         <div
-          className={`overflow-hidden transition-all duration-500 lg:hidden ${
-            showSearch
-              ? "max-h-40 opacity-100"
-              : "max-h-0 opacity-0"
-          }`}
+          className={`overflow-hidden transition-all duration-500 lg:hidden ${showSearch
+            ? "max-h-125 opacity-100 pt-3 pb-6"
+            : "max-h-0 opacity-0 pt-0"
+            }`}
         >
 
-          <div className="border-t border-white/10 bg-black/80 px-4 py-4 backdrop-blur-3xl">
+          {/* SEARCH WRAPPER */}
+          <div className="px-4">
 
-            <form
-              onSubmit={handleSearchSubmit}
-              className="relative"
-            >
+            {/* FLOATING SEARCH BOX */}
+            <div className="mx-auto w-full max-w-md overflow-hidden rounded-[28px] border border-white/10 bg-black/70 shadow-2xl backdrop-blur-3xl">
 
-              <IoSearchSharp className="absolute left-5 top-1/2 -translate-y-1/2 text-xl text-gray-400" />
+              {/* SEARCH FORM */}
+              <form
+                onSubmit={handleSearchSubmit}
+                className="relative p-3"
+              >
 
-              <input
-                type="text"
-                placeholder="Search movies, TV shows..."
-                value={searchQuery}
-                onChange={(e) =>
-                  setSearchQuery(e.target.value)
-                }
-                className="h-14 w-full rounded-2xl border border-white/10 bg-white/5 pl-14 pr-5 text-white outline-none backdrop-blur-xl placeholder:text-gray-500 focus:border-red-500"
-              />
+                {/* SEARCH ICON */}
+                <div className="absolute left-6 top-1/2 z-10 -translate-y-1/2">
 
-            </form>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/5 text-gray-400">
+
+                    <IoSearchSharp className="text-lg" />
+
+                  </div>
+
+                </div>
+
+                {/* INPUT */}
+                <input
+                  type="text"
+                  placeholder="Search movies..."
+                  value={searchQuery}
+                  onChange={(e) =>
+                    setSearchQuery(e.target.value)
+                  }
+                  onFocus={() =>
+                    setShowSuggestions(true)
+                  }
+                  onBlur={() =>
+                    setTimeout(() => {
+                      setShowSuggestions(false);
+                    }, 200)
+                  }
+                  className="h-14 w-full rounded-2xl border border-white/10 bg-white/[0.04] pl-16 pr-5 text-sm text-white outline-none transition-all duration-300 placeholder:text-gray-500 focus:border-red-500 focus:bg-white/[0.07]"
+                />
+
+              </form>
+
+              {/* QUICK TAGS */}
+              {!searchQuery && (
+                <div className="flex gap-2 overflow-x-auto px-3 pb-3">
+
+                  {[
+                    "Marvel",
+                    "Anime",
+                    "Trending",
+                    "Netflix",
+                  ].map((tag) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() =>
+                        setSearchQuery(tag)
+                      }
+                      className="whitespace-nowrap rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs text-gray-300 transition-all duration-300 hover:bg-red-600 hover:text-white"
+                    >
+                      {tag}
+                    </button>
+                  ))}
+
+                </div>
+              )}
+
+              {/* SUGGESTIONS */}
+              <div
+                className={`overflow-hidden transition-all duration-500 ${showSuggestions &&
+                  searchQuery
+                  ? "max-h-[350px] opacity-100"
+                  : "max-h-0 opacity-0"
+                  }`}
+              >
+
+                {/* LOADING */}
+                {loadingSuggestions && (
+                  <div className="p-5 text-center text-sm text-gray-400">
+                    Searching...
+                  </div>
+                )}
+
+                {/* RESULTS */}
+                {!loadingSuggestions &&
+                  suggestions.map((item) => (
+                    <Link
+                      key={item.id}
+                      to={`/${item.media_type === "tv"
+                        ? "tv"
+                        : "movie"
+                        }/${item.id}`}
+                      onClick={() => {
+                        setShowSuggestions(false);
+                        setShowSearch(false);
+                        setSearchQuery("");
+                      }}
+                      className="group flex items-center gap-3 border-t border-white/5 px-3 py-3 transition-all duration-300 hover:bg-white/[0.03]"
+                    >
+
+                      {/* POSTER */}
+                      <div className="overflow-hidden rounded-xl">
+
+                        <img
+                          src={
+                            item.poster_path
+                              ? `https://image.tmdb.org/t/p/w200${item.poster_path}`
+                              : "https://placehold.co/200x300/111/FFF?text=No+Image"
+                          }
+                          alt={item.title || item.name}
+                          className="h-14 w-10 object-cover transition-all duration-500 group-hover:scale-110"
+                        />
+
+                      </div>
+
+                      {/* INFO */}
+                      <div className="min-w-0 flex-1 text-left">
+
+                        <h3 className="line-clamp-1 text-sm font-medium text-white transition-all duration-300 group-hover:text-red-400">
+                          {item.title || item.name}
+                        </h3>
+
+                        <div className="mt-1 flex items-center gap-2 text-[11px] text-gray-400">
+
+                          <span className="capitalize">
+                            {item.media_type}
+                          </span>
+
+                          <span className="h-1 w-1 rounded-full bg-gray-500" />
+
+                          <span>
+                            {(
+                              item.release_date ||
+                              item.first_air_date ||
+                              ""
+                            ).split("-")[0]}
+                          </span>
+
+                        </div>
+                      </div>
+
+                      {/* PLAY BUTTON */}
+                      <div className="translate-x-2 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-red-600 text-white shadow-lg shadow-red-600/20">
+
+                          <FaPlay className="text-xs" />
+
+                        </div>
+
+                      </div>
+
+                    </Link>
+                  ))}
+
+                {/* EMPTY */}
+                {!loadingSuggestions &&
+                  searchQuery &&
+                  suggestions.length === 0 && (
+                    <div className="p-8 text-center">
+
+                      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/5 text-gray-400">
+
+                        <IoSearchSharp className="text-xl" />
+
+                      </div>
+
+                      <p className="mt-4 text-sm text-gray-400">
+                        No results found
+                      </p>
+
+                    </div>
+                  )}
+
+              </div>
+            </div>
           </div>
         </div>
 
       </nav>
 
-      {/* MOBILE MENU */}
-      <div
-        className={`fixed inset-0 z-999 transition-all duration-500 xl:hidden ${
-          isOpen
-            ? "visible opacity-100"
-            : "invisible opacity-0"
-        }`}
-      >
+      {/* MOBILE BOTTOM NAVBAR */}
+<div className="fixed bottom-0 left-0 right-0 z-[999] border-t border-white/10 bg-black/80 backdrop-blur-3xl xl:hidden">
 
-        {/* BACKDROP */}
-        <div
-          onClick={() => setIsOpen(false)}
-          className="absolute inset-0 bg-black/80 backdrop-blur-2xl"
-        />
+  {/* TOP GLOW */}
+  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500 to-transparent" />
 
-        {/* SIDEBAR */}
-        <div
-          className={`absolute right-0 top-0 h-full w-[82%] max-w-sm overflow-y-auto border-l border-white/10 bg-black/95 shadow-2xl transition-all duration-500 ${
-            isOpen
-              ? "translate-x-0"
-              : "translate-x-full"
-          }`}
+  <div className="grid grid-cols-5 px-2 py-2">
+
+    {[
+      {
+        name: "Home",
+        path: "/",
+        icon: <FaHouse />,
+      },
+      {
+        name: "Trending",
+        path: "/movies/popular",
+        icon: <FaCompass />,
+      },
+      {
+        name: "TV",
+        path: "/movies/tv",
+        icon: <FaTv />,
+      },
+      {
+        name: "Hot",
+        path: "/movies/upcoming",
+        icon: <FaFire />,
+      },
+      {
+        name: "Top",
+        path: "/movies/top_rated",
+        icon: <FaStar />,
+      },
+    ].map((item) => {
+
+      const isActive =
+        location.pathname === item.path;
+
+      return (
+        <Link
+          key={item.name}
+          to={item.path}
+          className="group relative flex flex-col items-center justify-center gap-1 py-2"
         >
 
-          {/* HEADER */}
-          <div className="relative overflow-hidden border-b border-white/10 p-6">
+          {/* ACTIVE BG */}
+          <div
+            className={`absolute inset-1 rounded-2xl transition-all duration-300 ${
+              isActive
+                ? "bg-white/10"
+                : "bg-transparent"
+            }`}
+          />
 
-            <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-red-600/20 blur-3xl" />
-
-            <div className="relative flex items-center justify-between">
-
-              <div className="flex items-center gap-3">
-
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-red-600 to-orange-500">
-
-                  <FaPlay className="text-white" />
-
-                </div>
-
-                <div>
-
-                  <h2 className="text-2xl font-black text-white">
-                    SuMovie
-                  </h2>
-
-                  <p className="text-sm text-gray-400">
-                    Premium Streaming UI
-                  </p>
-
-                </div>
-
-              </div>
-
-              <button
-                onClick={() => setIsOpen(false)}
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-3xl text-white transition-all duration-300 hover:bg-red-600"
-              >
-                <IoIosClose />
-              </button>
-
-            </div>
+          {/* ICON */}
+          <div
+            className={`relative z-10 text-lg transition-all duration-300 ${
+              isActive
+                ? "scale-110 text-red-500"
+                : "text-gray-400 group-hover:text-white"
+            }`}
+          >
+            {item.icon}
           </div>
 
-          {/* LINKS */}
-          <div className="flex flex-col gap-2 p-5">
+          {/* LABEL */}
+          <span
+            className={`relative z-10 text-[10px] font-medium transition-all duration-300 ${
+              isActive
+                ? "text-white"
+                : "text-gray-500 group-hover:text-gray-300"
+            }`}
+          >
+            {item.name}
+          </span>
 
-            {navLinks.map((link) => {
-              const isActive =
-                location.pathname === link.path;
+          {/* ACTIVE DOT */}
+          <div
+            className={`relative z-10 mt-0.5 h-1 w-1 rounded-full bg-red-500 transition-all duration-300 ${
+              isActive
+                ? "opacity-100"
+                : "opacity-0"
+            }`}
+          />
 
-              return (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  onClick={() => setIsOpen(false)}
-                  className={`group flex items-center gap-4 rounded-2xl px-5 py-4 text-lg font-semibold transition-all duration-300 ${
-                    isActive
-                      ? "bg-red-600 text-white shadow-lg shadow-red-600/20"
-                      : "bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white"
-                  }`}
-                >
+        </Link>
+      );
+    })}
 
-                  <span className="text-xl transition-transform duration-300 group-hover:scale-125">
-                    {link.icon}
-                  </span>
-
-                  {link.name}
-
-                </Link>
-              );
-            })}
-
-          </div>
-
-          {/* FOOTER */}
-          <div className="p-5">
-
-            <div className="overflow-hidden rounded-3xl border border-white/10 bg-linear-to-br from-red-600/20 via-white/5 to-orange-500/10 p-5 backdrop-blur-2xl">
-
-              <div className="mb-3 flex items-center gap-3">
-
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-600 text-xl text-white">
-
-                  <FaFire />
-
-                </div>
-
-                <div>
-
-                  <p className="text-sm text-gray-300">
-                    Trending Platform
-                  </p>
-
-                  <h3 className="text-xl font-black text-white">
-                    SuMovie
-                  </h3>
-
-                </div>
-
-              </div>
-
-              <p className="text-sm leading-relaxed text-gray-400">
-                Watch unlimited movies, anime and TV
-                shows with cinematic UI and ultra-fast
-                streaming experience.
-              </p>
-
-            </div>
-          </div>
-
-        </div>
-      </div>
+  </div>
+</div>
+     
     </>
   );
 };

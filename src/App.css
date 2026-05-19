@@ -20,5 +20,35 @@ hr{
   width: 100%;
   margin-top: 1rem;
 }
+.carousel .slide {
+  background: transparent !important;
+}
+
+.carousel-slider {
+  overflow: hidden;
+}
+
+img {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+
+input,
+button,
+img {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 999px;
+}
 
 @import "tailwindcss";

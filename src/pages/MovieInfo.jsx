@@ -13,7 +13,7 @@ import {
 import { Config } from "../config/Config.js";
 
 import Moviedetail from "./Moviedetail.jsx";
-import Trailer from "../components/trailer/Trailer.jsx";
+import Trailer from "../components/Trailer.jsx";
 
 const MovieInfo = () => {
   const { id, type: routeType } = useParams();

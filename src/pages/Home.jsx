@@ -102,149 +102,154 @@ const Home = () => {
     <div className="min-h-screen overflow-x-hidden bg-black text-white">
 
       {/* HERO */}
-      <div ref={carouselRef} className="relative">
-
-        {/* TOP GLOW */}
-        <div className="absolute left-0 top-0 z-10 h-40 w-full bg-linear-to-b from-black to-transparent" />
+      <div
+        ref={carouselRef}
+        className="relative overflow-hidden bg-black"
+      >
+        {/* TOP GRADIENT */}
+        <div className="pointer-events-none absolute left-0 top-0 z-20 h-32 w-full bg-gradient-to-b from-black to-transparent" />
 
         <Carousel
           autoPlay
           infiniteLoop
           interval={5000}
+          transitionTime={600}
           swipeable
           emulateTouch
           stopOnHover={false}
           showThumbs={false}
           showStatus={false}
-          showIndicators={true}
-          transitionTime={700}
+          showIndicators={false}
+          showArrows={false}
+          preventMovementUntilSwipeScrollTolerance
+          swipeScrollTolerance={40}
+          className="hero-carousel"
         >
-
-          {movieList.slice(0, 8).map((movie) => (
+          {movieList.slice(0, 8).map((movie, index) => (
             <div
               key={movie.id}
-              className="relative h-[65vh] sm:h-[75vh] md:h-[92vh] w-full overflow-hidden"
+              className="relative h-[68vh] sm:h-[78vh] md:h-[92vh] overflow-hidden"
             >
-
               {/* BACKDROP */}
               <img
                 src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
                 alt={movie.title}
-                className="h-full w-full object-cover scale-105"
+                loading={index === 0 ? "eager" : "lazy"}
+                className="absolute inset-0 h-full w-full object-cover"
+                style={{
+                  transform: "scale(1.04)",
+                  willChange: "transform",
+                }}
               />
 
               {/* OVERLAYS */}
-              <div className="absolute inset-0 bg-linear-to-r from-black via-black/70 to-black/20" />
+              <div className="absolute inset-0 bg-black/45" />
 
-              <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-black/40" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/55 to-transparent" />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-black/20" />
 
               {/* CONTENT */}
-              <div className="absolute bottom-10 left-4 right-4 z-20 sm:left-8 md:bottom-20 md:left-14">
+              <div className="absolute inset-0 z-10 flex items-end">
+                <div className="w-full px-4 pb-8 sm:px-8 md:px-14 md:pb-16">
 
-                <motion.div
-                  initial={{
-                    opacity: 0,
-                    y: 50,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  transition={{
-                    duration: 0.7,
-                  }}
-                  className="max-w-3xl"
-                >
+                  <motion.div
+                    initial={{
+                      opacity: 0,
+                      y: 30,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                    }}
+                    transition={{
+                      duration: 0.55,
+                      ease: "easeOut",
+                    }}
+                    className="max-w-3xl"
+                  >
+                    {/* BADGES */}
+                    <div className="mb-4 flex flex-wrap items-center gap-2 sm:gap-3">
 
-                  {/* BADGES */}
-                  <div className="mb-5 flex flex-wrap gap-3">
+                      <span className="flex items-center gap-2 rounded-full bg-red-600 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-white sm:px-4 sm:py-2 sm:text-xs">
+                        <FaFire />
+                        Trending
+                      </span>
 
-                    <span className="flex items-center gap-2 rounded-full bg-red-600 px-4 py-2 text-xs font-bold uppercase tracking-wide shadow-lg shadow-red-600/30 sm:text-sm">
-                      <FaFire />
-                      Trending Now
-                    </span>
+                      <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-[11px] text-white backdrop-blur-md sm:px-4 sm:py-2 sm:text-xs">
+                        4K Ultra HD
+                      </span>
 
-                    <span className="rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs backdrop-blur-xl sm:text-sm">
-                      4K Ultra HD
-                    </span>
+                      <span className="flex items-center gap-2 rounded-full border border-yellow-500/20 bg-yellow-500/10 px-3 py-1.5 text-[11px] text-yellow-300 sm:px-4 sm:py-2 sm:text-xs">
+                        <FaStar />
+                        {movie.vote_average?.toFixed(1)}
+                      </span>
 
-                    <span className="flex items-center gap-2 rounded-full border border-yellow-500/20 bg-yellow-500/10 px-4 py-2 text-xs text-yellow-300 sm:text-sm">
-                      <FaStar />
-                      {movie.vote_average?.toFixed(1)}
-                    </span>
+                    </div>
 
-                  </div>
+                    {/* TITLE */}
+                    <h1 className="max-w-4xl text-left text-3xl font-black leading-[0.95] tracking-tight text-white sm:text-5xl md:text-7xl">
+                      {movie.title}
+                    </h1>
 
-                  {/* TITLE */}
-                  <h1 className="max-w-4xl text-left text-3xl font-black leading-tight sm:text-5xl md:text-7xl">
+                    {/* DESCRIPTION */}
+                    <p className="mt-4 hidden max-w-2xl text-sm leading-relaxed text-gray-300 sm:block md:text-base text-left">
+                      {movie.overview?.slice(0, 190)}...
+                    </p>
 
-                    {movie.title}
+                    {/* META */}
+                    <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-gray-300 sm:text-sm md:text-base">
 
-                  </h1>
+                      <span className="font-medium text-white">
+                        {movie.release_date?.split("-")[0]}
+                      </span>
 
-                  {/* DESCRIPTION */}
-                  <p className="mt-5 hidden max-w-2xl text-sm leading-relaxed text-gray-300 sm:block md:text-base">
+                      <span className="h-1 w-1 rounded-full bg-red-500" />
 
-                    {movie.overview?.slice(0, 220)}...
+                      <span>Action</span>
 
-                  </p>
+                      <span className="h-1 w-1 rounded-full bg-red-500" />
 
-                  {/* META */}
-                  <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-gray-300 sm:text-base">
+                      <span>Adventure</span>
 
-                    <span className="font-semibold text-white">
-                      {movie.release_date}
-                    </span>
+                      <span className="h-1 w-1 rounded-full bg-red-500" />
 
-                    <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
+                      <span>Movie</span>
 
-                    <span>Action</span>
+                    </div>
 
-                    <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
+                    {/* BUTTONS */}
+                    <div className="mt-7 flex flex-wrap gap-3 sm:gap-4">
 
-                    <span>Adventure</span>
+                      <Link to={`/movie/${movie.id}`}>
+                        <button className="group flex items-center gap-3 rounded-2xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-red-500 active:scale-95 sm:px-7 sm:text-base">
 
-                    <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
+                          <IoPlayCircle className="text-2xl transition-transform duration-300 group-hover:scale-110" />
 
-                    <span>Movie</span>
+                          Watch Now
 
-                  </div>
+                        </button>
+                      </Link>
 
-                  {/* BUTTONS */}
-                  <div className="mt-8 flex flex-wrap gap-4">
+                      <Link to={`/movie/${movie.id}`}>
+                        <button className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white/20 active:scale-95 sm:px-7 sm:text-base">
 
-                    <Link to={`/movie/${movie.id}`}>
+                          <IoInformationCircleOutline className="text-2xl" />
 
-                      <button className="group flex items-center gap-3 rounded-2xl bg-red-600 px-6 py-3 text-sm font-semibold text-white shadow-xl shadow-red-600/30 transition-all duration-300 hover:scale-105 hover:bg-red-500 sm:px-8 sm:py-4 sm:text-base">
+                          More Info
 
-                        <IoPlayCircle className="text-2xl transition-transform duration-300 group-hover:scale-125" />
+                        </button>
+                      </Link>
 
-                        Watch Now
-
-                      </button>
-
-                    </Link>
-
-                    <Link to={`/movie/${movie.id}`}>
-
-                      <button className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-xl transition-all duration-300 hover:bg-white/20 sm:px-8 sm:py-4 sm:text-base">
-
-                        <IoInformationCircleOutline className="text-2xl" />
-
-                        More Info
-
-                      </button>
-
-                    </Link>
-
-                  </div>
-
-                </motion.div>
+                    </div>
+                  </motion.div>
+                </div>
               </div>
 
+              {/* BOTTOM FADE */}
+              <div className="pointer-events-none absolute bottom-0 left-0 h-40 w-full bg-gradient-to-t from-black to-transparent" />
             </div>
           ))}
-
         </Carousel>
       </div>
 
